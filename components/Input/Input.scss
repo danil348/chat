@@ -1,0 +1,22 @@
+@import '../../src/styles/variables.scss';
+.input__wrapper {
+	.input__label {
+		display: flex;
+		font-size: 12px;
+		margin-bottom: 8px;
+		align-items: center;
+		color: $textColor-opacity-1;
+		font-weight: 700;
+		line-height: 16p;
+		gap: 5px;
+	}
+
+	input {
+		padding: 10px;
+		height: 40px;
+		background-color: $bg-dark-1;
+		width: 100%;
+		font-size: 16px;
+		border-radius: 3px;
+	}
+}

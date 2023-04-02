@@ -1,0 +1,75 @@
+@import '../../src/styles/variables.scss';
+
+.form__wrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 100;
+	width: 100%;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	.form__container {
+		border-radius: 5px;
+		position: relative;
+		padding: 32px;
+		min-width: 480px;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		background-color: $bg-dark-2;
+		color: $textColor;
+	}
+
+	.form__title {
+		font-weight: 700;
+		text-align: center;
+		font-size: 24px;
+	}
+
+	.form__closeButton {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		cursor: pointer;
+	}
+
+	.form__text {
+		text-align: center;
+		font-size: 16px;
+		color: $textColor-opacity-1;
+	}
+	.form__content {
+		margin-top: 10px;
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+	.button {
+		margin-top: 20px;
+		width: 100%;
+		background-color: $bg-blue-1;
+		font-size: 16px;
+		line-height: 24px;
+		height: 44px;
+		min-width: 130px;
+		min-height: 44px;
+		border-radius: 3px;
+		padding: 2px 16px;
+		display: inline-block;
+		text-align: center;
+	}
+
+	.form__footerContent {
+		color: $textColor-opacity-1;
+		font-size: 14px;
+		line-height: 16px;
+		span {
+			margin-left: 4px;
+			color: $bg-blue-2;
+			cursor: pointer;
+		}
+	}
+}
