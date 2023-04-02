@@ -1,0 +1,10 @@
+@import '../../../src/styles/variables.scss';
+
+.chats__container {
+	height: 100%;
+	display: flex;
+}
+
+.chat{
+	flex: 3;
+}

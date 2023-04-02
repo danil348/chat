@@ -1,0 +1,122 @@
+@import '../../src/styles/variables.scss';
+
+.layout__content {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	.chats__container {
+		flex: 0 1 100%;
+	}
+	.layout__navBar {
+		padding: 12px 0;
+		flex: 0 0 72px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		background-color: $bg-dark-1;
+
+		.layout__navBar-item {
+			margin-bottom: 8px;
+			width: 100%;
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			position: relative;
+
+			&:nth-child(1) {
+				margin-bottom: 22px;
+				&::before {
+					content: '';
+					position: absolute;
+					width: 32px;
+					height: 2px;
+					background: $bg-dark-4;
+					bottom: -11px;
+					left: 50%;
+					transform: translate(-50%, 1px);
+				}
+			}
+
+			.layout__navBar-prompt {
+				position: absolute;
+				opacity: 0;
+				visibility: hidden;
+				transition: all 0.3s ease 0s;
+				right: -10px;
+				transform: translate(100%, 0);
+				padding: 10px;
+				background: $bg-dark-5;
+				color: $textColor;
+				border-radius: 5px;
+				z-index: 1;
+				&::before {
+					content: '';
+					position: absolute;
+					width: 10px;
+					left: 0;
+					top: 50%;
+					transform: translate(-50%, -50%) rotate(45deg);
+					height: 10px;
+					background: $bg-dark-5;
+					z-index: -1;
+				}
+			}
+
+			.layout__navBar-selected {
+				position: absolute;
+				left: 0;
+				top: 50%;
+				transform: translate(-4px, -50%);
+				width: 8px;
+				background-color: white;
+				opacity: 0;
+				visibility: hidden;
+				transition: all 0.3s ease 0s;
+				border-radius: 0 4px 4px 0;
+				height: 40px;
+			}
+
+			&.selected {
+				.layout__navBar-button {
+					background-color: $bg-blue-1;
+					border-radius: 16px;
+				}
+				.layout__navBar-selected {
+					height: 40px !important;
+					opacity: 1;
+					visibility: visible;
+				}
+			}
+		}
+
+		.layout__navBar-button {
+			transition: all 0.3s ease 0s;
+
+			@media (any-hover: hover) {
+				&:hover {
+					background-color: $bg-blue-1;
+					border-radius: 16px;
+					.layout__navBar-prompt {
+						opacity: 1;
+						visibility: visible;
+					}
+
+					+ .layout__navBar-selected {
+						opacity: 1;
+						height: 20px;
+						visibility: visible;
+					}
+				}
+			}
+			cursor: pointer;
+			border-radius: 100%;
+			width: 48px;
+			height: 48px;
+			background-color: $bg-dark-2;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+}

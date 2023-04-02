@@ -19,7 +19,7 @@
 *::before,
 *::after {
 	box-sizing: border-box;
-	font-family: "Noto Sans";
+	font-family: 'Noto Sans';
 }
 
 /* Reapply the pointer cursor for anchor tags */
@@ -103,4 +103,15 @@ meter {
 /* Revert Modal native behavior */
 :where(dialog:modal) {
 	all: revert;
+}
+
+html {
+	height: 100%;
+}
+body {
+	height: 100%;
+}
+
+#__next {
+	height: 100%;
 }
