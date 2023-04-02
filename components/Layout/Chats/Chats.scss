@@ -5,6 +5,47 @@
 	display: flex;
 }
 
-.chat{
+.chat {
 	flex: 3;
+}
+
+.user__content {
+	width: 122px;
+	height: 52px;
+	padding: 0 8px;
+	display: flex;
+	align-items: center;
+	flex-wrap: nowrap;
+	.user__logo {
+		margin-right: 8px;
+		flex: 0 0 32px;
+		height: 32px;
+		position: relative;
+		img {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			object-fit: cover;
+			border-radius: 100%;
+		}
+	}
+	.user__name {
+		font-size: 14px;
+		font-weight: 600;
+		text-overflow: ellipsis;
+		color: $textColor;
+		white-space: nowrap;
+		max-width: 76px;
+		overflow: hidden;
+		line-height: 18px;
+	}
+	.user__id {
+		max-width: 100px;
+		text-overflow: ellipsis;
+		font-size: 12px;
+		line-height: 13px;
+		color: $textColor-opacity-1;
+	}
 }
