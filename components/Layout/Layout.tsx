@@ -3,6 +3,8 @@ import { BiLogInCircle } from 'react-icons/bi';
 import { BsDiscord } from 'react-icons/bs';
 import useChats from '../../hooks/useChats';
 import useFoo from '../../hooks/useFoo';
+import useLoginModal from '../../hooks/useLoginModal';
+import useRegisterModal from '../../hooks/useRegisterModal';
 import Chats from './Chats/Chats';
 import Foo from './Foo/Foo';
 import NavBarItem from './NavBarItem/NavBarItem';
@@ -13,9 +15,15 @@ interface ILayout {
 
 const Layout: React.FC<ILayout> = ({children}) => {
 
-	
+  const loginModal = useLoginModal()
+  const registerModal = useRegisterModal()
 	const chats = useChats()
 	const foo = useFoo()
+	
+	if(loginModal.isOpen == true || registerModal.isOpen == true){
+		return
+	}
+
 
 	return (
 		<div className="layout__content">

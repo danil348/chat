@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
 import useLoginModal from "../../hooks/useLoginModal";
 import useRegisterModal from "../../hooks/useRegisterModal";
 import { auth, db } from "../../src/firebase";
@@ -17,6 +18,8 @@ const RegisterModal = () => {
   const [name, setName] = useState<string>('')
   const [username, setUsername] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  
+  const userContext = useContext(AuthContext)
 
   const onSubmit = useCallback(async () => {
 		try {
@@ -25,8 +28,14 @@ const RegisterModal = () => {
       const res = await createUserWithEmailAndPassword(auth, email, password)
 
       await updateProfile(res.user, {
-        displayName: name
+        displayName: username
       });
+
+      userContext.setCurrentUser({
+        name: res.user.displayName,
+        email: res.user.email,
+        uid: res.user.uid
+      })
       
       await setDoc(doc(db, "users", res.user.uid), {
         uid: res.user.uid,
@@ -34,6 +43,8 @@ const RegisterModal = () => {
         email,
         username
       });
+      
+      await setDoc(doc(db, "userChats", res.user.uid), {});
       
 			registerModal.onClose()
 		} catch (error) {
