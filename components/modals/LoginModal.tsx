@@ -1,7 +1,8 @@
 import { auth } from "@/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 import useLoginModal from "../../hooks/useLoginModal";
 import useRegisterModal from "../../hooks/useRegisterModal";
 import Input from "../Input/Input";
@@ -16,7 +17,34 @@ const LoginModal = () => {
   const [password, setPassword] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
+  const { setItem } = useLocalStorage();
+  const { getItem } = useLocalStorage();
+  
   const userContext = useContext(AuthContext)
+
+  useEffect(() => {
+    const login = async () => {
+      const _password = getItem('password');
+      const _email = getItem('email');
+
+      if (_password && _email) {
+        console.log(_password)
+        const res = await signInWithEmailAndPassword(auth, _email as string, _password as string);
+      
+        userContext.setCurrentUser({
+          name: res.user.displayName,
+          email: res.user.email,
+          uid: res.user.uid
+        })
+
+        loginModal.onClose()
+      }
+    }
+
+    if(loginModal.isOpen){
+      login();
+    }
+  }, [email, getItem, loginModal, password, userContext]);
 
   const onSubmit = useCallback(async () => {
 		try {
@@ -30,13 +58,16 @@ const LoginModal = () => {
         uid: res.user.uid
       })
 
+      setItem('password', password);
+      setItem('email', email);
+
 			loginModal.onClose()
 		} catch (error) {
 			console.log("🚀 ~ file: LoginModal.tsx:16 ~ onSubmit ~ error:", error)
 		} finally {
 			setIsLoading(false)
 		}
-	}, [email, loginModal, password, userContext])
+	}, [email, loginModal, password, setItem, userContext])
 
   const onToggle = useCallback(() => {
     if(isLoading){

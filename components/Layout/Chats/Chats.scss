@@ -96,6 +96,7 @@
 			border-radius: 8px;
 			padding: 0px 10px;
 			input {
+				flex: 0 1 90%;
 				color: $textColor-opacity-1;
 				&::placeholder {
 					color: $textColor-opacity-2;

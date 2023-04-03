@@ -1,7 +1,8 @@
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 import useLoginModal from "../../hooks/useLoginModal";
 import useRegisterModal from "../../hooks/useRegisterModal";
 import { auth, db } from "../../src/firebase";
@@ -20,6 +21,38 @@ const RegisterModal = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   
   const userContext = useContext(AuthContext)
+  
+  const { setItem } = useLocalStorage();
+  const { getItem } = useLocalStorage();
+
+  useEffect(() => {
+    const login = async () => {
+      try {
+        const _password = getItem('password');
+        const _email = getItem('email');
+
+        if (_password && _email) {
+          
+          console.log(_password)
+          const res = await signInWithEmailAndPassword(auth, _email as string, _password as string);
+        
+          userContext.setCurrentUser({
+            name: res.user.displayName,
+            email: res.user.email,
+            uid: res.user.uid
+          })
+
+          registerModal.onClose()
+        }
+      } catch (error) {
+        console.log("🚀 ~ file: LoginModal.tsx:16 ~ onSubmit ~ error:", error)
+      }
+    }
+
+    if(registerModal.isOpen){
+      login();
+    }
+  }, [email, getItem, loginModal, password, registerModal, userContext]);
 
   const onSubmit = useCallback(async () => {
 		try {
@@ -37,6 +70,9 @@ const RegisterModal = () => {
         uid: res.user.uid
       })
       
+      setItem('password', password);
+      setItem('email', email);
+      
       await setDoc(doc(db, "users", res.user.uid), {
         uid: res.user.uid,
         displayName: name,
@@ -52,7 +88,7 @@ const RegisterModal = () => {
 		} finally {
 			setIsLoading(false)
 		}
-	}, [email, name, password, registerModal, username])
+	}, [email, name, password, registerModal, setItem, userContext, username])
 
   const onToggle = useCallback(() => {
     if(isLoading){

@@ -3,6 +3,7 @@ import { BiLogInCircle } from 'react-icons/bi';
 import { BsDiscord } from 'react-icons/bs';
 import useChats from '../../hooks/useChats';
 import useFoo from '../../hooks/useFoo';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 import useLoginModal from '../../hooks/useLoginModal';
 import useRegisterModal from '../../hooks/useRegisterModal';
 import SearchModal from '../modals/SearchModal/SearchModal';
@@ -20,6 +21,8 @@ const Layout: React.FC<ILayout> = ({children}) => {
   const registerModal = useRegisterModal()
 	const chats = useChats()
 	const foo = useFoo()
+	
+  const { removeItem } = useLocalStorage();
 	
 	if(loginModal.isOpen == true || registerModal.isOpen == true){
 		return
@@ -44,8 +47,18 @@ const Layout: React.FC<ILayout> = ({children}) => {
 						chats.onClose()
 						foo.onOpen()
 					}}
-					icon={<BiLogInCircle size={26} color='white'/>}
 					isOpen={foo.isOpen}
+					prompt='Foo'
+					/>
+					<NavBarItem 
+					onClick={() => {
+						chats.onClose()
+						foo.onClose()
+						removeItem("password")
+						removeItem("email")
+						registerModal.onOpen();
+					}}
+					icon={<BiLogInCircle size={26} color='white'/>}
 					prompt='Выйти'
 					/>
 			</div>

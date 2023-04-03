@@ -3,8 +3,8 @@ import { AuthContext } from "../../../../context/AuthContext";
 
 const Message = ({ message } : any) => {
   const { currentUser } = useContext(AuthContext);
-
-  return (
+	
+	return (
     <div
       className={`message ${message.senderId === currentUser.uid && "owner"}`}
     >
