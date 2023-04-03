@@ -1,6 +1,9 @@
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { useCallback, useState } from "react";
 import useLoginModal from "../../hooks/useLoginModal";
 import useRegisterModal from "../../hooks/useRegisterModal";
+import { auth, db } from "../../src/firebase";
 import Input from "../Input/Input";
 import Modal from "../Modal/Modal";
 
@@ -19,15 +22,26 @@ const RegisterModal = () => {
 		try {
 			setIsLoading(true)
 
-			//
+      const res = await createUserWithEmailAndPassword(auth, email, password)
 
+      await updateProfile(res.user, {
+        displayName: name
+      });
+      
+      await setDoc(doc(db, "users", res.user.uid), {
+        uid: res.user.uid,
+        displayName: name,
+        email,
+        username
+      });
+      
 			registerModal.onClose()
 		} catch (error) {
 			console.log("🚀 ~ file: LoginModal.tsx:16 ~ onSubmit ~ error:", error)
 		} finally {
 			setIsLoading(false)
 		}
-	}, [registerModal])
+	}, [email, name, password, registerModal, username])
 
   const onToggle = useCallback(() => {
     if(isLoading){

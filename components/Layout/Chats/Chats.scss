@@ -45,6 +45,9 @@
 		max-width: 100px;
 		text-overflow: ellipsis;
 		font-size: 12px;
+		max-width: 80px;
+		overflow: hidden;
+		white-space: nowrap;
 		line-height: 13px;
 		color: $textColor-opacity-1;
 	}

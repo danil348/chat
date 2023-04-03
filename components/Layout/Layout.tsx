@@ -8,11 +8,12 @@ import Foo from './Foo/Foo';
 import NavBarItem from './NavBarItem/NavBarItem';
 
 interface ILayout { 
-	children: React.ReactNode;
+	children?: React.ReactNode;
 }
 
 const Layout: React.FC<ILayout> = ({children}) => {
 
+	
 	const chats = useChats()
 	const foo = useFoo()
 

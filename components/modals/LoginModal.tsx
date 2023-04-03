@@ -1,4 +1,7 @@
-import { useCallback, useState } from "react";
+import { auth } from "@/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useCallback, useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
 import useLoginModal from "../../hooks/useLoginModal";
 import useRegisterModal from "../../hooks/useRegisterModal";
 import Input from "../Input/Input";
@@ -13,11 +16,19 @@ const LoginModal = () => {
   const [password, setPassword] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
+  const userContext = useContext(AuthContext)
+
   const onSubmit = useCallback(async () => {
 		try {
 			setIsLoading(true)
 
-			//
+      const res = await signInWithEmailAndPassword(auth, email, password);
+
+      userContext.setCurrentUser({
+        name: res.user.displayName,
+        email: res.user.email,
+        uid: res.user.uid
+      })
 
 			loginModal.onClose()
 		} catch (error) {
@@ -25,7 +36,7 @@ const LoginModal = () => {
 		} finally {
 			setIsLoading(false)
 		}
-	}, [loginModal])
+	}, [email, loginModal, password])
 
   const onToggle = useCallback(() => {
     if(isLoading){
@@ -43,7 +54,6 @@ const LoginModal = () => {
       warning={true}
       labelContent="адрес электронной почты"
       placeholder=""
-      type="email"
       onChange={(e) => setEmail(e.target.value)}
       value={email}
       disabled={isLoading}
