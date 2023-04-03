@@ -5,6 +5,7 @@ import useChats from '../../hooks/useChats';
 import useFoo from '../../hooks/useFoo';
 import useLoginModal from '../../hooks/useLoginModal';
 import useRegisterModal from '../../hooks/useRegisterModal';
+import SearchModal from '../modals/SearchModal/SearchModal';
 import Chats from './Chats/Chats';
 import Foo from './Foo/Foo';
 import NavBarItem from './NavBarItem/NavBarItem';
@@ -27,6 +28,7 @@ const Layout: React.FC<ILayout> = ({children}) => {
 
 	return (
 		<div className="layout__content">
+			<SearchModal/>
 			<div className="layout__navBar">
 				<NavBarItem 
 					onClick={() => {

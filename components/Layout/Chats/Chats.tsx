@@ -1,11 +1,11 @@
 import { db } from "@/firebase";
-import { DocumentData, collection, getDocs, query, where } from "firebase/firestore";
-import React, { useContext, useState } from "react";
+import { DocumentData, doc, onSnapshot } from "firebase/firestore";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
+import useSearchModal from "../../../hooks/useSearchModal";
 import mainBg from "../../../public/mainBg.png";
 import Sidebar from "../../Sidebar/Sidebar";
 import Profile from "../Profile/Profile";
-import Search from "../Search/Search";
 
 
 interface ChatsProps {
@@ -14,35 +14,25 @@ interface ChatsProps {
 
 const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 
+	const [chats, setChats] = useState<DocumentData>([])
+  const searchModal = useSearchModal()
   const userContext = useContext(AuthContext)
-	
-	const [value, setValue] = useState<string>('')
-	const [user, setUser] = useState<DocumentData>({})
-	const [err, setErr] = useState(false);
 
-	const handleSearch = async () => {
-		console.log(value)
-		const q = query(
-      collection(db, "users"),
-      where("displayName", "==", value)
-    );
-
-		try {
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        setUser(doc.data());
+	useEffect(() => {
+    const getChats = () => {
+      const unsub = onSnapshot(doc(db, "userChats", userContext.currentUser?.uid), (doc) => {
+        setChats(doc.data() as DocumentData);
       });
-    } catch (err) {
-      setErr(true);
-    }
-	}
 
-	const handleKey = (e: React.KeyboardEvent) => {
-		if(e.code == "Enter"){
-			handleSearch()
-		}
-	}
-	
+      return () => {
+        unsub();
+      };
+    };
+
+    userContext.currentUser?.uid && getChats();
+  }, [userContext.currentUser?.uid]);
+	console.log(Object.entries(chats))
+
 	if(isOpen == false){
 		return null;
 	}
@@ -50,15 +40,17 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 
 	const sidebarContent = (
 		<div className="sidebar__content">
-			{ user.displayName != userContext.currentUser.name && <div className="">
-				{user.displayName} <tr/>
-				{user.email}
-			</div> }
+			{Object.entries(chats)?.map(chat => (
+				<div className="123" key={chat[0]}>{chat[1].userInfo.displayName}</div>
+			))}
 		</div>
 	)
 
 	const searchContent = (
-		<Search placeholder="Найти беседу" onChange={(e) => setValue(e.target.value)} onKeyDown={(e) => handleKey(e)} />
+		<div className="search__wrapper">
+			<button className="search__button" onClick={() => {searchModal.onOpen()}}>Найти беседу</button>
+		</div>
+		//<Search placeholder="Найти беседу" onChange={(e) => setValue(e.target.value)} onKeyDown={(e) => handleKey(e)} />
 	)
 
 	const profile = (

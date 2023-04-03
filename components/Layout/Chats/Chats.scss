@@ -3,6 +3,33 @@
 .chats__container {
 	height: 100%;
 	display: flex;
+
+	.search__wrapper {
+		padding: 0 10px;
+		flex: 0 0 48px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-bottom: 1px solid $bg-dark-1;
+
+		button {
+			background-color: $bg-dark-1;
+			border-radius: 4px;
+			height: 28px;
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 24px;
+			width: 100%;
+			padding: 0px 5px;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			color: $textColor-opacity-1;
+			font-size: 12px;
+			font-weight: 500;
+			line-height: 24px;
+			cursor: pointer;
+		}
+	}
 }
 
 .chat {

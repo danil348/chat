@@ -1,6 +1,6 @@
 import '@/styles/globals.scss'
 
-import React, { useContext } from 'react'
+import React from 'react'
 import '../../components/Button/Button.scss'
 import '../../components/Input/Input.scss'
 import '../../components/Layout/Chats/Chats.scss'
@@ -10,7 +10,8 @@ import '../../components/Layout/Profile/Profile.scss'
 import '../../components/Layout/Search/Search.scss'
 import '../../components/Modal/Modal.scss'
 import '../../components/Sidebar/Sidebar.scss'
-import { AuthContext, AuthContextProvider } from '../../context/AuthContext'
+import '../../components/modals/SearchModal/SearchModal.scss'
+import { AuthContextProvider } from '../../context/AuthContext'
 import Home from '../pages/index'
 
 export default function App() {

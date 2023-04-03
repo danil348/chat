@@ -1,33 +1,19 @@
 @import '../../../src/styles/variables.scss';
 
 .search__wrapper {
-	padding: 0 10px;
-	flex: 0 0 48px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
+	width: 100%;
 	input {
-		background-color: $bg-dark-1;
-		border-radius: 4px;
-		height: 28px;
-		font-size: 14px;
-		font-weight: 500;
-		line-height: 24px;
 		width: 100%;
-		padding: 0px 5px;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		color: $textColor-opacity-1;
-		font-size: 12px;
-		font-weight: 500;
-		line-height: 24px;
+		background-color: $bg-dark-1;
+		height: 70px;
+		line-height: 70px;
+		padding: 0 12px;
+		font-size: 22px;
+		border-radius: 5px;
+		color: $textColor-opacity-2;
 
 		&::placeholder {
-			color: $textColor-opacity-1;
-			font-size: 12px;
-			font-weight: 500;
-			line-height: 24px;
+			color: $textColor-opacity-2;
 		}
 	}
 }
