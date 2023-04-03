@@ -1,9 +1,45 @@
 @import '../../../src/styles/variables.scss';
 
 .chats__container {
+	.chat {
+		background-color: $bg-dark-2;
+	}
 	height: 100%;
 	display: flex;
-
+	.sidebar__content {
+		padding: 8px;
+	}
+	.sidebar__content {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+	.sidebar-item {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		.sidebar-item__image {
+			width: 32px;
+			background-color: $bg-dark-7;
+			height: 32px;
+			border-radius: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		&.selected {
+			background-color: $bg-dark-7;
+		}
+		height: 48px;
+		cursor: pointer;
+		border-radius: 4px;
+		transition: all 0.3s ease 0s;
+		@media (any-hover: hover) {
+			&:hover {
+				background-color: $bg-dark-8;
+			}
+		}
+	}
 	.search__wrapper {
 		padding: 0 10px;
 		flex: 0 0 48px;
@@ -33,7 +69,40 @@
 }
 
 .chat {
+	display: flex;
+	flex-direction: column;
 	flex: 3;
+	.topBar__container {
+		border-bottom: 1px solid $bg-dark-1;
+		flex: 0 0 48px;
+	}
+	.messages {
+		flex: 0 1 100%;
+	}
+	.chatInput__wrapper {
+		flex: 0 0 68px;
+		padding-left: 16px;
+		padding-right: 16px;
+		.input {
+			.send__button {
+				cursor: pointer;
+			}
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			width: 100%;
+			height: 44px;
+			background-color: $bg-dark-9;
+			border-radius: 8px;
+			padding: 0px 10px;
+			input {
+				color: $textColor-opacity-1;
+				&::placeholder {
+					color: $textColor-opacity-2;
+				}
+			}
+		}
+	}
 }
 
 .user__content {

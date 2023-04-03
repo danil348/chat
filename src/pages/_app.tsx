@@ -10,8 +10,10 @@ import '../../components/Layout/Profile/Profile.scss'
 import '../../components/Layout/Search/Search.scss'
 import '../../components/Modal/Modal.scss'
 import '../../components/Sidebar/Sidebar.scss'
+import '../../components/TopBar/TopBar.scss'
 import '../../components/modals/SearchModal/SearchModal.scss'
 import { AuthContextProvider } from '../../context/AuthContext'
+import { ChatContextProvider } from '../../context/ChatContext'
 import Home from '../pages/index'
 
 export default function App() {
@@ -19,9 +21,11 @@ export default function App() {
 
   return (
     <AuthContextProvider>
-      <React.StrictMode>
-        <Home/>
-      </React.StrictMode>
+      <ChatContextProvider>
+        <React.StrictMode>
+          <Home/>
+        </React.StrictMode>
+      </ChatContextProvider>
     </AuthContextProvider>
   )
 }

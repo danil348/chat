@@ -1,0 +1,17 @@
+@import '../../src/styles/variables.scss';
+
+.topBar__container {
+	height: 48px;
+	padding: 0 10px;
+	background-color: $bg-dark-2;
+	.topBar__profile {
+		display: flex;
+		height: 100%;
+		align-items: center;
+		color: $textColor;
+		gap: 8px;
+		.topBar__userName {
+			cursor: pointer;
+		}
+	}
+}

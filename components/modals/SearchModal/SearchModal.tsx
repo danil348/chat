@@ -47,12 +47,15 @@ const SearchModal = () => {
 		try {
       const res = await getDoc(doc(db, "chats", combinedId));
 
-      if (!res.exists()) {
-				console.log(userContext.currentUser?.displayName)
+      if (!res.exists() && user) {
         //create a chat in chats collection
         await setDoc(doc(db, "chats", combinedId), { messages: [] });
 
         //create user chats
+				
+				console.log( userContext.currentUser?.uid)
+				console.log( user?.uid)
+				console.log(userContext.currentUser?.name)
         await updateDoc(doc(db, "userChats", userContext.currentUser?.uid), {
           [combinedId + ".userInfo"]: {
             uid: user?.uid,
@@ -60,16 +63,17 @@ const SearchModal = () => {
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
-
-        await updateDoc(doc(db, "userChats", user?.uid), {
+				
+				await updateDoc(doc(db, "userChats", user?.uid as any), {
           [combinedId + ".userInfo"]: {
             uid: userContext.currentUser?.uid,
-            displayName: userContext.currentUser?.displayName
+            displayName: userContext.currentUser?.name
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
-
-
+				
+        setUser({});
+    		setValue("")
       }
     } catch (err) {}
 	}
@@ -87,7 +91,7 @@ const SearchModal = () => {
 						 onKeyDown={(e) => handleKey(e)} 
 						 />
 					{user && 	<div className="" onClick={handleSelect} >{user.displayName}</div>}
-					{err && <div className="searchModal__text"><span>ПОДСКАЗКА:</span>Введите имя пользователя и нажмите <span>Enter</span></div>}
+					{!err && <div className="searchModal__text"><span>ПОДСКАЗКА:</span>Введите имя пользователя и нажмите <span>Enter</span></div>}
 				</div>
 			</div>
 		</div>

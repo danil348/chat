@@ -1,11 +1,16 @@
 import { db } from "@/firebase";
 import { DocumentData, doc, onSnapshot } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
+import { BsDiscord } from "react-icons/bs";
 import { AuthContext } from "../../../context/AuthContext";
+import { ChatContext } from "../../../context/ChatContext";
 import useSearchModal from "../../../hooks/useSearchModal";
 import mainBg from "../../../public/mainBg.png";
 import Sidebar from "../../Sidebar/Sidebar";
+import TopBar from "../../TopBar/TopBar";
 import Profile from "../Profile/Profile";
+import MessageInput from "./MessageInput/MessageInput";
+import Messages from "./Messeges/Messeges";
 
 
 interface ChatsProps {
@@ -17,6 +22,8 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 	const [chats, setChats] = useState<DocumentData>([])
   const searchModal = useSearchModal()
   const userContext = useContext(AuthContext)
+  const { dispatch } = useContext(ChatContext);
+  const { state } = useContext(ChatContext);
 
 	useEffect(() => {
     const getChats = () => {
@@ -31,7 +38,10 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 
     userContext.currentUser?.uid && getChats();
   }, [userContext.currentUser?.uid]);
-	console.log(Object.entries(chats))
+
+	const handleSelect = (u : any) => {
+		dispatch({type: "CHANGE_USER", payload: u})
+	}
 
 	if(isOpen == false){
 		return null;
@@ -40,8 +50,17 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 
 	const sidebarContent = (
 		<div className="sidebar__content">
-			{Object.entries(chats)?.map(chat => (
-				<div className="123" key={chat[0]}>{chat[1].userInfo.displayName}</div>
+			{chats && Object.entries(chats)?.map(chat => (
+				<div 
+					className={chat[1].userInfo?.uid == state.user?.uid ? "sidebar__item sidebar-item selected" : "sidebar__item sidebar-item"} 
+					key={chat[0]}
+					onClick={() => handleSelect(chat[1].userInfo)}
+				>
+					<div className="sidebar-item__image" >
+						<BsDiscord size={20} color='white'/>
+					</div>
+					<div className="">{chat[1].userInfo?.displayName}</div>
+				</div>
 			))}
 		</div>
 	)
@@ -64,7 +83,13 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 	return (
 		<div className="chats__container">
 			<Sidebar content={sidebarContent} profile={profile} searchInput={searchContent}/>
-			<div className="chat">foo</div>
+			<div className="chat">
+				<TopBar profile={state.user}/>
+				<Messages/>
+				<div className="chatInput__wrapper">
+					<MessageInput/>
+				</div>
+			</div>
 		</div>
 	)
 }
