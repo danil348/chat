@@ -21,7 +21,7 @@ const SearchModal = () => {
 	const handleSearch = async () => {
 		const q = query(
       collection(db, "users"),
-      where("displayName", "==", value)
+      where("username", "==", value)
     );
 
 		try {
@@ -53,13 +53,10 @@ const SearchModal = () => {
 
         //create user chats
 				
-				console.log( userContext.currentUser?.uid)
-				console.log( user?.uid)
-				console.log(userContext.currentUser?.name)
         await updateDoc(doc(db, "userChats", userContext.currentUser?.uid), {
           [combinedId + ".userInfo"]: {
             uid: user?.uid,
-            displayName: user?.displayName
+            displayName: user?.username
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
@@ -90,7 +87,7 @@ const SearchModal = () => {
 						}}
 						 onKeyDown={(e) => handleKey(e)} 
 						 />
-					{user && 	<div className="" onClick={handleSelect} >{user.displayName}</div>}
+					{user && 	<div className="" onClick={handleSelect} >{user.username}</div>}
 					{!err && <div className="searchModal__text"><span>ПОДСКАЗКА:</span>Введите имя пользователя и нажмите <span>Enter</span></div>}
 				</div>
 			</div>
