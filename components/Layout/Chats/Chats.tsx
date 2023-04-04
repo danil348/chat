@@ -1,12 +1,12 @@
 import { db } from "@/firebase";
-import { DocumentData, arrayUnion, doc, getDoc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { DocumentData, doc, getDoc, onSnapshot } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { BsDiscord } from "react-icons/bs";
-import { v4 as uuid } from "uuid";
 import { AuthContext } from "../../../context/AuthContext";
 import { ChatContext } from "../../../context/ChatContext";
 import useSearchModal from "../../../hooks/useSearchModal";
+import useSelectUsersModal from "../../../hooks/useSelectUsersModal";
 import Sidebar from "../../Sidebar/Sidebar";
 import TopBar from "../../TopBar/TopBar";
 import Profile from "../Profile/Profile";
@@ -22,9 +22,12 @@ interface ChatsProps {
 const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 
 	const [chats, setChats] = useState<DocumentData>([])
+
   const searchModal = useSearchModal()
+  const selectedUsersModal = useSelectUsersModal()
+	
   const userContext = useContext(AuthContext)
-  const { dispatch } = useContext(ChatContext);
+	const { dispatch } = useContext(ChatContext);
   const { state } = useContext(ChatContext);
 
 	useEffect(() => {
@@ -60,7 +63,7 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 
 		userContext.currentUser?.uid && getUserImagee();
     userContext.currentUser?.uid && getChats();
-  }, [userContext.currentUser?.uid]);
+  }, [userContext, userContext.currentUser?.uid]);
 
 	const handleSelect = (u : any) => {
 		dispatch({type: "CHANGE_USER", payload: u})
@@ -70,26 +73,14 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 		return null;
 	}
 
-	const handleCreateChat = async () => {
-		const uid = uuid();
-
-		await setDoc(doc(db, "groupChats", uid), { messages: [] });
-
-		await updateDoc(doc(db, "users", userContext.currentUser.uid), {
-			groupChats: arrayUnion({
-				id: uid,
-				name: "foo",
-				usersCount: 1
-			}),
-		});
-	}
-
 	const sidebarContent = (
 		<div className="sidebar__content">
 			<div className="sidebar__info sidebar-info">
 				<SelectUsersModal/>
 				<div className="sidebar-info__text">Личные сообщения</div>
-				<div className="sidebar-info__button" onClick={handleCreateChat}>
+				<div className="sidebar-info__button" onClick={() => {
+					selectedUsersModal.onToggle(selectedUsersModal.isOpen)
+				}}>
 					<AiOutlinePlus size={20} />
 					<div className="sidebar-info__prompt">Создать чат</div>
 				</div>
