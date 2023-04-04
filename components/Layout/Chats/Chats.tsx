@@ -56,7 +56,7 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 					onClick={() => handleSelect(chat[1].userInfo)}
 				>
 					<div className="sidebar-item__image" >
-						<BsDiscord size={20} color='white'/>
+						{chat[1].userInfo?.photoURL ? <img loading="lazy" src={chat[1].userInfo?.photoURL} alt=""/> : <BsDiscord size={20} color='white'/>}
 					</div>
 					<div className="">{chat[1].userInfo?.displayName}</div>
 				</div>

@@ -52,22 +52,43 @@ const SearchModal = () => {
         await setDoc(doc(db, "chats", combinedId), { messages: [] });
 
         //create user chats
+				if(user.photoURL){
+					await updateDoc(doc(db, "userChats", userContext.currentUser?.uid), {
+						[combinedId + ".userInfo"]: {
+							uid: user?.uid,
+							displayName: user?.username,
+							photoURL: user.photoURL
+						},
+						[combinedId + ".date"]: serverTimestamp(),
+					});
+				}else{
+					await updateDoc(doc(db, "userChats", userContext.currentUser?.uid), {
+					[combinedId + ".userInfo"]: {
+						uid: user?.uid,
+						displayName: user?.username
+					},
+					[combinedId + ".date"]: serverTimestamp(),
+				});
+				}
 				
-        await updateDoc(doc(db, "userChats", userContext.currentUser?.uid), {
-          [combinedId + ".userInfo"]: {
-            uid: user?.uid,
-            displayName: user?.username
-          },
-          [combinedId + ".date"]: serverTimestamp(),
-        });
-				
-				await updateDoc(doc(db, "userChats", user?.uid as any), {
-          [combinedId + ".userInfo"]: {
-            uid: userContext.currentUser?.uid,
-            displayName: userContext.currentUser?.name
-          },
-          [combinedId + ".date"]: serverTimestamp(),
-        });
+				if( userContext.currentUser?.photoURL ){
+					await updateDoc(doc(db, "userChats", user?.uid as any), {
+						[combinedId + ".userInfo"]: {
+							uid: userContext.currentUser?.uid,
+							displayName: userContext.currentUser?.name,
+							photoURL: userContext.currentUser.photoURL
+						},
+						[combinedId + ".date"]: serverTimestamp(),
+					});
+				}else{
+					await updateDoc(doc(db, "userChats", user?.uid as any), {
+						[combinedId + ".userInfo"]: {
+							uid: userContext.currentUser?.uid,
+							displayName: userContext.currentUser?.name
+						},
+						[combinedId + ".date"]: serverTimestamp(),
+					});
+				}
 				
         setUser({});
     		setValue("")
