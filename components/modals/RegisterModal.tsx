@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import useChats from "../../hooks/useChats";
@@ -33,24 +33,28 @@ const RegisterModal = () => {
       try {
         const _password = getItem('password');
         const _email = getItem('email');
-        const _photoURl = getItem('photoURL');
 
         if (_password && _email) {
           
           const res = await signInWithEmailAndPassword(auth, _email as string, _password as string);
         
-          if(_photoURl){
+          const docRef = doc(db, "users", res.user.uid);
+          const docSnap = await getDoc(docRef);
+
+          if(docSnap.data()?.photoURL){
             userContext.setCurrentUser({
-              name: res.user.displayName,
-              email: res.user.email,
-              uid: res.user.uid,
-              photoURL: _photoURl
+              name: docSnap.data()?.username,
+              displayName: docSnap.data()?.displayName,
+              email: docSnap.data()?.email,
+              uid: docSnap.data()?.uid,
+              photoURL: docSnap.data()?.photoURL
             })
           }else{
             userContext.setCurrentUser({
-              name: res.user.displayName,
-              email: res.user.email,
-              uid: res.user.uid
+              name: docSnap.data()?.username,
+              displayName: docSnap.data()?.displayName,
+              email: docSnap.data()?.email,
+              uid: docSnap.data()?.uid,
             })
           }
 
@@ -87,7 +91,6 @@ const RegisterModal = () => {
       
       setItem('password', password)
       setItem('email', email)
-      removeItem('photoURL')
 
       chats.onOpen()
 

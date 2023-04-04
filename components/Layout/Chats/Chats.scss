@@ -13,6 +13,52 @@
 		display: flex;
 		flex-direction: column;
 		gap: 2px;
+		.sidebar-info__button {
+			display: flex;
+			cursor: pointer;
+			justify-content: center;
+			align-items: center;
+			position: relative;
+			@media (any-hover: hover) {
+				&:hover {
+					.sidebar-info__prompt {
+						opacity: 1;
+						visibility: visible;
+					}
+				}
+			}
+			.sidebar-info__prompt {
+				position: absolute;
+				white-space: nowrap;
+				transition: all 0.3s ease 0s;
+				right: -10px;
+				transform: translate(100%, 0);
+				opacity: 0;
+				visibility: hidden;
+				padding: 10px;
+				background: #141415;
+				color: rgb(227, 227, 227);
+				border-radius: 5px;
+				z-index: 1;
+				&::before {
+					content: '';
+					position: absolute;
+					width: 10px;
+					left: 0;
+					top: 50%;
+					transform: translate(-50%, -50%) rotate(45deg);
+					height: 10px;
+					background: #141415;
+					z-index: -1;
+				}
+			}
+		}
+		.sidebar-info {
+			margin: 0 auto;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
 	}
 	.sidebar-item {
 		display: flex;

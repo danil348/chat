@@ -10,7 +10,6 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import { AuthContext } from "../../../../../context/AuthContext";
-import { useLocalStorage } from "../../../../../hooks/useLocalStorage";
 import useUserProfileSettings from "../../../../../hooks/useUserProfileSettings";
 
 const UserProfileSettings = () => {
@@ -18,7 +17,6 @@ const UserProfileSettings = () => {
   const userProfileSettings = useUserProfileSettings()
 
 	const [chats, setChats] = useState<DocumentData>([])
-  const { setItem } = useLocalStorage();
   const [img, setImg] = useState<File | null>(null);
   const userContext = useContext(AuthContext)
 	
@@ -64,7 +62,6 @@ const UserProfileSettings = () => {
 						});
 					})
 
-					setItem('photoURL', downloadURL);
 					await updateDoc(doc(db, "users", currentUser.currentUser.uid), {
 						photoURL: downloadURL,
 					});

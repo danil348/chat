@@ -41,6 +41,7 @@
 			.layout__navBar-prompt {
 				position: absolute;
 				opacity: 0;
+				white-space: nowrap;
 				visibility: hidden;
 				transition: all 0.3s ease 0s;
 				right: -10px;

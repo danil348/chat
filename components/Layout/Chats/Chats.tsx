@@ -1,7 +1,9 @@
 import { db } from "@/firebase";
-import { DocumentData, doc, onSnapshot } from "firebase/firestore";
+import { DocumentData, arrayUnion, doc, getDoc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
+import { AiOutlinePlus } from "react-icons/ai";
 import { BsDiscord } from "react-icons/bs";
+import { v4 as uuid } from "uuid";
 import { AuthContext } from "../../../context/AuthContext";
 import { ChatContext } from "../../../context/ChatContext";
 import useSearchModal from "../../../hooks/useSearchModal";
@@ -10,6 +12,7 @@ import TopBar from "../../TopBar/TopBar";
 import Profile from "../Profile/Profile";
 import MessageInput from "./MessageInput/MessageInput";
 import Messages from "./Messeges/Messeges";
+import SelectUsersModal from "./SelectUsersModal/SelectUsersModal";
 
 
 interface ChatsProps {
@@ -35,6 +38,27 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
       };
     };
 
+		const getUserImagee = () => {
+      const unsub = onSnapshot(doc(db, "users", userContext.currentUser?.uid), async (docs) => {
+				const docRef = doc(db, "users", userContext.currentUser?.uid);
+				const docSnap = await getDoc(docRef);
+				if(docSnap.data()?.photoURL){
+					userContext.setCurrentUser({
+						name: docSnap.data()?.username,
+						displayName: docSnap.data()?.displayName,
+						email: docSnap.data()?.email,
+						uid: docSnap.data()?.uid,
+						photoURL: docSnap.data()?.photoURL
+					})
+				}
+      });
+
+      return () => {
+        unsub();
+      };
+    };
+
+		userContext.currentUser?.uid && getUserImagee();
     userContext.currentUser?.uid && getChats();
   }, [userContext.currentUser?.uid]);
 
@@ -46,9 +70,30 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 		return null;
 	}
 
+	const handleCreateChat = async () => {
+		const uid = uuid();
+
+		await setDoc(doc(db, "groupChats", uid), { messages: [] });
+
+		await updateDoc(doc(db, "users", userContext.currentUser.uid), {
+			groupChats: arrayUnion({
+				id: uid,
+				name: "foo",
+				usersCount: 1
+			}),
+		});
+	}
 
 	const sidebarContent = (
 		<div className="sidebar__content">
+			<div className="sidebar__info sidebar-info">
+				<SelectUsersModal/>
+				<div className="sidebar-info__text">Личные сообщения</div>
+				<div className="sidebar-info__button" onClick={handleCreateChat}>
+					<AiOutlinePlus size={20} />
+					<div className="sidebar-info__prompt">Создать чат</div>
+				</div>
+			</div>
 			{chats && Object.entries(chats)?.map(chat => (
 				<div 
 					className={chat[1].userInfo?.uid == state.user?.uid ? "sidebar__item sidebar-item selected" : "sidebar__item sidebar-item"} 

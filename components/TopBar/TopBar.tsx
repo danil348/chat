@@ -14,7 +14,7 @@ const TopBar: React.FC<TopBarProps> = ({profile}) => {
 		<div className="topBar__container">
 			{profile && 
 				<div className="topBar__profile">
-					<TbAt color="#909090" size={25}/>
+					{state.user?.displayName && <TbAt color="#909090" size={25}/>}
 					<div className="topBar__userName">{state.user?.displayName}</div>
 				</div>
 			}

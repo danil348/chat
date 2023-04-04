@@ -1,7 +1,9 @@
-import { auth } from "@/firebase";
+import { auth, db } from "@/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import useChats from "../../hooks/useChats";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import useLoginModal from "../../hooks/useLoginModal";
 import useRegisterModal from "../../hooks/useRegisterModal";
@@ -12,6 +14,7 @@ const LoginModal = () => {
 
   const loginModal = useLoginModal()
   const registerModal = useRegisterModal()
+  const chats = useChats()
 
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -24,27 +27,45 @@ const LoginModal = () => {
 
   useEffect(() => {
     const login = async () => {
-      const _password = getItem('password');
-      const _email = getItem('email');
+      try {
+        const _password = getItem('password');
+        const _email = getItem('email');
 
-      if (_password && _email) {
-        console.log(_password)
-        const res = await signInWithEmailAndPassword(auth, _email as string, _password as string);
-      
-        userContext.setCurrentUser({
-          name: res.user.displayName,
-          email: res.user.email,
-          uid: res.user.uid
-        })
+        if (_password && _email) {
+          
+          const res = await signInWithEmailAndPassword(auth, _email as string, _password as string);
+        
+          const docRef = doc(db, "users", res.user.uid);
+          const docSnap = await getDoc(docRef);
 
-        loginModal.onClose()
+          if(docSnap.data()?.photoURL){
+            userContext.setCurrentUser({
+              name: docSnap.data()?.username,
+              displayName: docSnap.data()?.displayName,
+              email: docSnap.data()?.email,
+              uid: docSnap.data()?.uid,
+              photoURL: docSnap.data()?.photoURL
+            })
+          }else{
+            userContext.setCurrentUser({
+              name: docSnap.data()?.username,
+              displayName: docSnap.data()?.displayName,
+              email: docSnap.data()?.email,
+              uid: docSnap.data()?.uid,
+            })
+          }
+
+          loginModal.onClose()
+        }
+      } catch (error) {
+        console.log("🚀 ~ file: LoginModal.tsx:16 ~ onSubmit ~ error:", error)
       }
     }
 
     if(loginModal.isOpen){
       login();
     }
-  }, [email, getItem, loginModal, password, userContext]);
+  }, [email, getItem, loginModal, password, registerModal, userContext]);
 
   const onSubmit = useCallback(async () => {
 		try {
@@ -52,12 +73,26 @@ const LoginModal = () => {
 
       const res = await signInWithEmailAndPassword(auth, email, password);
 
-      userContext.setCurrentUser({
-        name: res.user.displayName,
-        email: res.user.email,
-        uid: res.user.uid
-      })
+      const docRef = doc(db, "users", res.user.uid);
+      const docSnap = await getDoc(docRef);
 
+      if(docSnap.data()?.photoURL){
+        userContext.setCurrentUser({
+          name: docSnap.data()?.username,
+          email: docSnap.data()?.email,
+          uid: docSnap.data()?.uid,
+          photoURL: docSnap.data()?.photoURL
+        })
+      }else{
+        userContext.setCurrentUser({
+          name: docSnap.data()?.username,
+          email: docSnap.data()?.email,
+          uid: docSnap.data()?.uid,
+        })
+      }
+
+      chats.onOpen()
+      
       setItem('password', password);
       setItem('email', email);
 
@@ -67,7 +102,7 @@ const LoginModal = () => {
 		} finally {
 			setIsLoading(false)
 		}
-	}, [email, loginModal, password, setItem, userContext])
+	}, [chats, email, loginModal, password, setItem, userContext])
 
   const onToggle = useCallback(() => {
     if(isLoading){
