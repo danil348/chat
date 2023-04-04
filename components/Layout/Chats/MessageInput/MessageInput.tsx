@@ -1,13 +1,14 @@
 import { db, storage } from "@/firebase";
 import {
-	Timestamp,
-	arrayUnion,
-	doc,
-	serverTimestamp,
-	updateDoc,
+  Timestamp,
+  arrayUnion,
+  doc,
+  serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useState } from "react";
+import { RiImageLine, RiMailSendLine } from "react-icons/ri";
 import { v4 as uuid } from "uuid";
 import { AuthContext } from "../../../../context/AuthContext";
 import { ChatContext } from "../../../../context/ChatContext";
@@ -65,26 +66,35 @@ const Input = () => {
     setImg(null);
   };
   return (
-    <div className="input">
-      <input
-        type="text"
-        placeholder="Type something..."
-        onChange={(e) => setText(e.target.value)}
-        value={text}
-      />
-      <div className="send">
-        <input
-          type="file"
-          id="file"
-					onChange={(e) => {
-						if(e.target.files){
-							setImg(e.target.files[0])
-						}
-					}}
-        />
-        <button onClick={handleSend}>Send</button>
-      </div>
-    </div>
+    <>
+      {state.user?.displayName && 
+        <div className="input">
+          <input
+            type="text"
+            placeholder={"Написать @" + state.user?.displayName}
+            onChange={(e) => setText(e.target.value)}
+            value={text}
+          />
+          <input
+              type="file"
+              id="file"
+              style={{ display: "none" }}
+              onChange={(e) => {
+                if(e.target.files){
+                  setImg(e.target.files[0])
+                }
+              }}
+            />
+            <label htmlFor="file" className="input__labelFile">
+              <RiImageLine size={24} color="rgb(195, 195, 195)"/>
+            </label>
+            <div className="input__buttonSend">
+              <RiMailSendLine className="send__button" onClick={handleSend} size={24} color="rgb(195, 195, 195)"/>
+            </div>
+        </div>
+      }
+    </>
+    
   );
 };
 

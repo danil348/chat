@@ -7,24 +7,32 @@
 	display: flex;
 	flex-wrap: nowrap;
 	position: absolute;
+	.settings__wrapper {
+		background-color: $bg-dark-2;
+		display: flex;
+		flex: 1 1 800px;
+	}
 	.settingsSidebar__container {
-		flex: 1;
+		.settingsSidebar__wrapper {
+			padding: 60px 6px 60px 20px;
+			width: 218px;
+		}
+		flex: 1 0 218px;
+		display: flex;
+		align-items: flex-end;
 		min-width: 218px;
 		background-color: $bg-dark-3;
 	}
 	.settingsContent__container {
 		flex: 3;
 		padding: 60px 40px 80px;
+		max-width: 740px;
 		overflow-y: scroll;
 		position: relative;
 		background-color: $bg-dark-2;
 		&::-webkit-scrollbar {
 			width: 0; /* Remove scrollbar space */
 			background: transparent; /* Optional: just make scrollbar invisible */
-		}
-		/* Optional: show position indicator in red */
-		&::-webkit-scrollbar-thumb {
-			background: #ff0000;
 		}
 	}
 	.settingsNavbar__container {

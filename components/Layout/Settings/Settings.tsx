@@ -14,8 +14,10 @@ const Settings = () => {
 	return (
 		<div className="settings__container">
 			<SettingsSidebar/>
-			<SettingsContent/>
-			<SettingsNavbar/>
+			<div className="settings__wrapper">
+				<SettingsContent/>
+				<SettingsNavbar/>
+			</div>
 		</div>
 	)
 }

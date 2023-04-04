@@ -80,6 +80,17 @@
 	.messages {
 		flex: 0 1 100%;
 		overflow-y: scroll;
+		padding: 16px 10px 20px 16px;
+		&::-webkit-scrollbar {
+			border-radius: 10px;
+			width: 7px; /* Remove scrollbar space */
+			background: $bg-dark-3; /* Optional: just make scrollbar invisible */
+		}
+		/* Optional: show position indicator in red */
+		&::-webkit-scrollbar-thumb {
+			border-radius: 10px;
+			background: $bg-dark-11;
+		}
 	}
 	.chatInput__wrapper {
 		background-color: $bg-dark-2;
@@ -87,6 +98,18 @@
 		padding-left: 16px;
 		padding-right: 16px;
 		.input {
+			.input__labelFile {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin-right: 12px;
+				cursor: pointer;
+			}
+			.input__buttonSend {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
 			.send__button {
 				cursor: pointer;
 			}
@@ -99,7 +122,7 @@
 			border-radius: 8px;
 			padding: 0px 10px;
 			input {
-				flex: 0 1 90%;
+				flex: 0 1 100%;
 				color: $textColor-opacity-1;
 				&::placeholder {
 					color: $textColor-opacity-2;

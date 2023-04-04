@@ -87,6 +87,7 @@ const Input = () => {
 						}
 					}}
         />
+        
 			<RiMailSendLine className="send__button" onClick={handleSend} size={24} color="rgb(195, 195, 195)"/>
     </div>
   );

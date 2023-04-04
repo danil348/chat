@@ -7,7 +7,15 @@
 	justify-content: space-between;
 	background-color: $bg-dark-6;
 
-	.profile__button{
+	.user__logo {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-radius: 100%;
+		background-color: $bg-dark-7;
+	}
+
+	.profile__button {
 		cursor: pointer;
 		transition: all 0.3s ease 0s;
 		width: 32px;
@@ -15,11 +23,11 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-    border-radius: 4px;
+		border-radius: 4px;
 
-		@media (any-hover: hover){
-			&:hover{
-				background-color:  $bg-dark-10;
+		@media (any-hover: hover) {
+			&:hover {
+				background-color: $bg-dark-10;
 			}
 		}
 	}

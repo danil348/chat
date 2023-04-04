@@ -5,7 +5,6 @@ import { BsDiscord } from "react-icons/bs";
 import { AuthContext } from "../../../context/AuthContext";
 import { ChatContext } from "../../../context/ChatContext";
 import useSearchModal from "../../../hooks/useSearchModal";
-import mainBg from "../../../public/mainBg.png";
 import Sidebar from "../../Sidebar/Sidebar";
 import TopBar from "../../TopBar/TopBar";
 import Profile from "../Profile/Profile";
@@ -75,7 +74,7 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 	const profile = (
 		<Profile 
 			name="alex" 
-			img={<img loading="lazy" src={mainBg.src} alt=""/>}
+			img={userContext.currentUser?.photoURL && <img loading="lazy" src={userContext.currentUser?.photoURL} alt=""/>}
 			id="#1231233"
 		/>
 	)

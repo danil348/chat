@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfi
 import { doc, setDoc } from "firebase/firestore";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import useChats from "../../hooks/useChats";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import useLoginModal from "../../hooks/useLoginModal";
 import useRegisterModal from "../../hooks/useRegisterModal";
@@ -13,6 +14,7 @@ const RegisterModal = () => {
 
   const loginModal = useLoginModal()
   const registerModal = useRegisterModal()
+  const chats = useChats()
 
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -24,23 +26,33 @@ const RegisterModal = () => {
   
   const { setItem } = useLocalStorage();
   const { getItem } = useLocalStorage();
+  const { removeItem } = useLocalStorage();
 
   useEffect(() => {
     const login = async () => {
       try {
         const _password = getItem('password');
         const _email = getItem('email');
+        const _photoURl = getItem('photoURL');
 
         if (_password && _email) {
           
-          console.log(_password)
           const res = await signInWithEmailAndPassword(auth, _email as string, _password as string);
         
-          userContext.setCurrentUser({
-            name: res.user.displayName,
-            email: res.user.email,
-            uid: res.user.uid
-          })
+          if(_photoURl){
+            userContext.setCurrentUser({
+              name: res.user.displayName,
+              email: res.user.email,
+              uid: res.user.uid,
+              photoURL: _photoURl
+            })
+          }else{
+            userContext.setCurrentUser({
+              name: res.user.displayName,
+              email: res.user.email,
+              uid: res.user.uid
+            })
+          }
 
           registerModal.onClose()
         }
@@ -59,6 +71,7 @@ const RegisterModal = () => {
 			setIsLoading(true)
 
       const res = await createUserWithEmailAndPassword(auth, email, password)
+      const names = res.user.displayName
 
       await updateProfile(res.user, {
         displayName: username
@@ -67,12 +80,17 @@ const RegisterModal = () => {
       userContext.setCurrentUser({
         name: res.user.displayName,
         email: res.user.email,
-        uid: res.user.uid
+        uid: res.user.uid,
+        displayName: names,
+        photoURL: null
       })
       
-      setItem('password', password);
-      setItem('email', email);
-      
+      setItem('password', password)
+      setItem('email', email)
+      removeItem('photoURL')
+
+      chats.onOpen()
+
       await setDoc(doc(db, "users", res.user.uid), {
         uid: res.user.uid,
         displayName: name,
@@ -88,7 +106,7 @@ const RegisterModal = () => {
 		} finally {
 			setIsLoading(false)
 		}
-	}, [email, name, password, registerModal, setItem, userContext, username])
+	}, [chats, email, name, password, registerModal, setItem, userContext, username])
 
   const onToggle = useCallback(() => {
     if(isLoading){

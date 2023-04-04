@@ -1,1 +1,36 @@
 @import '../../../../src/styles/variables.scss';
+
+.settingsSidebar__container {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	box-sizing: border-box;
+	.settingsSidebar__title {
+		text-align: center;
+		text-transform: uppercase;
+		font-size: 11px;
+		line-height: 16px;
+		margin-bottom: 8px;
+		font-weight: 700;
+		color: $textColor-opacity-2;
+	}
+	.settingsSidebar__item {
+		height: 32px;
+		display: flex;
+		border-radius: 4px;
+		align-items: center;
+		cursor: pointer;
+		color: $textColor-opacity-1;
+		transition: all 0.3s ease 0s;
+		padding: 6px 10px;
+		&.selected {
+			background-color: $bg-dark-7;
+			color: $textColor;
+		}
+		@media (any-hover: hover) {
+			&:hover {
+				background-color: $bg-dark-8;
+			}
+		}
+	}
+}
