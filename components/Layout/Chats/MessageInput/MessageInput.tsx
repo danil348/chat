@@ -15,8 +15,8 @@ import { ChatContext } from "../../../../context/ChatContext";
 
 const Input = () => {
   const [text, setText] = useState("");
-
   const [img, setImg] = useState<File | null>(null);
+  
   const  currentUser = useContext(AuthContext);
   const { state } = useContext(ChatContext);
 

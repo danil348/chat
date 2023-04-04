@@ -18,8 +18,8 @@ const UserProfileSettings = () => {
 
 	const [chats, setChats] = useState<DocumentData>([])
   const [img, setImg] = useState<File | null>(null);
-  const userContext = useContext(AuthContext)
 	
+  const userContext = useContext(AuthContext)
 	const  currentUser = useContext(AuthContext);
 
 	useEffect(() => {

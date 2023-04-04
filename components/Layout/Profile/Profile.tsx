@@ -12,8 +12,9 @@ interface ProfileProps {
 
 const Profile: React.FC<ProfileProps> = ({img, name, id}) => {
 	
-  const userContext = useContext(AuthContext)
   const settingsContext = useSettings()
+	
+  const userContext = useContext(AuthContext)
 
 	return (
 		<div className="profile__content">
