@@ -1,5 +1,7 @@
 import { useContext } from "react"
+import { TbSettingsFilled } from "react-icons/tb"
 import { AuthContext } from "../../../context/AuthContext"
+import useSettings from "../../../hooks/useSettings"
 
 interface ProfileProps {
 	img?: React.ReactElement
@@ -10,6 +12,7 @@ interface ProfileProps {
 const Profile: React.FC<ProfileProps> = ({img, name, id}) => {
 	
   const userContext = useContext(AuthContext)
+  const settingsContext = useSettings()
 
 	return (
 		<div className="profile__content">
@@ -21,6 +24,9 @@ const Profile: React.FC<ProfileProps> = ({img, name, id}) => {
 					<div className="user__name">{userContext.currentUser?.name}</div>
 					<div className="user__id">{userContext.currentUser?.uid}</div>
 				</div>
+			</div>
+			<div className="profile__button" onClick={settingsContext.onOpen}>
+				<TbSettingsFilled size={20}/>
 			</div>
 		</div>
 	)

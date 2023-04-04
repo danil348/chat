@@ -10,6 +10,7 @@ import SearchModal from '../modals/SearchModal/SearchModal';
 import Chats from './Chats/Chats';
 import Foo from './Foo/Foo';
 import NavBarItem from './NavBarItem/NavBarItem';
+import Settings from './Settings/Settings';
 
 interface ILayout { 
 	children?: React.ReactNode;
@@ -25,7 +26,7 @@ const Layout: React.FC<ILayout> = ({children}) => {
   const { removeItem } = useLocalStorage();
 	
 	if(loginModal.isOpen == true || registerModal.isOpen == true){
-		return
+		return null
 	}
 
 
@@ -64,6 +65,7 @@ const Layout: React.FC<ILayout> = ({children}) => {
 			</div>
 			<Foo isOpen={foo.isOpen}/>
 			<Chats isOpen={chats.isOpen}/>
+			<Settings/>
 		</div>
 	)
 }

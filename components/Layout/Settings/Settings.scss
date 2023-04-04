@@ -1,0 +1,48 @@
+@import '../../../src/styles/variables.scss';
+
+.settings__container {
+	width: 100vw;
+	height: 100vh;
+	z-index: 200;
+	display: flex;
+	flex-wrap: nowrap;
+	position: absolute;
+	.settingsSidebar__container {
+		flex: 1;
+		min-width: 218px;
+		background-color: $bg-dark-3;
+	}
+	.settingsContent__container {
+		flex: 3;
+		padding: 60px 40px 80px;
+		overflow-y: scroll;
+		position: relative;
+		background-color: $bg-dark-2;
+		&::-webkit-scrollbar {
+			width: 0; /* Remove scrollbar space */
+			background: transparent; /* Optional: just make scrollbar invisible */
+		}
+		/* Optional: show position indicator in red */
+		&::-webkit-scrollbar-thumb {
+			background: #ff0000;
+		}
+	}
+	.settingsNavbar__container {
+		display: flex;
+		flex-direction: column;
+		flex: 0 0 57px;
+		padding-top: 60px;
+		background-color: $bg-dark-2;
+		.settingsNavbar-button {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			color: $textColor-opacity-1;
+			font-weight: 600;
+			font-size: 13px;
+			gap: 8px;
+			top: 60px;
+			right: 21px;
+		}
+	}
+}

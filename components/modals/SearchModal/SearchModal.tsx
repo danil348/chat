@@ -15,7 +15,7 @@ const SearchModal = () => {
 	const [err, setErr] = useState(false);
 	
 	if(searchModal.isOpen == false){
-		return;
+		return null
 	}
 	
 	const handleSearch = async () => {

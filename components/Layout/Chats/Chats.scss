@@ -78,9 +78,11 @@
 		flex: 0 0 48px;
 	}
 	.messages {
+		flex: 0 1 100%;
 		overflow-y: scroll;
 	}
 	.chatInput__wrapper {
+		background-color: $bg-dark-2;
 		flex: 0 0 68px;
 		padding-left: 16px;
 		padding-right: 16px;
