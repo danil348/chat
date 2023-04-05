@@ -62,8 +62,15 @@
 	}
 	.sidebar-item {
 		display: flex;
+		padding: 0px 8px;
 		align-items: center;
 		gap: 10px;
+		.sidebar-item__check {
+			margin-left: auto;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
 		.sidebar-item__image {
 			width: 32px;
 			background-color: $bg-dark-7;

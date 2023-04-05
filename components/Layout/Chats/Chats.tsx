@@ -5,6 +5,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { BsDiscord } from "react-icons/bs";
 import { AuthContext } from "../../../context/AuthContext";
 import { ChatContext } from "../../../context/ChatContext";
+import { GroupChatContext } from "../../../context/GroupChatContext";
 import useSearchModal from "../../../hooks/useSearchModal";
 import useSelectUsersModal from "../../../hooks/useSelectUsersModal";
 import Sidebar from "../../Sidebar/Sidebar";
@@ -22,19 +23,32 @@ interface ChatsProps {
 const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 
 	const [chats, setChats] = useState<DocumentData>([])
+	const [groupChats, setGroupChats] = useState<DocumentData>([])
 
   const searchModal = useSearchModal()
   const selectedUsersModal = useSelectUsersModal()
 	
   const userContext = useContext(AuthContext)
 	const { dispatch } = useContext(ChatContext);
+	const { dispatchGroupChats } = useContext(GroupChatContext);
   const { state } = useContext(ChatContext);
+  const { ChatState } = useContext(GroupChatContext);
 
 	useEffect(() => {
     const getChats = () => {
       const unsub = onSnapshot(doc(db, "userChats", userContext.currentUser?.uid), (doc) => {
         setChats(doc.data() as DocumentData);
       });
+
+      return () => {
+        unsub();
+      };
+    };
+
+		const getGroupChats = () => {
+			const unsub = onSnapshot(doc(db, "users", userContext.currentUser?.uid), (doc) => {
+				doc.exists() && setGroupChats(doc.data().groupChats);
+			});
 
       return () => {
         unsub();
@@ -61,14 +75,21 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
       };
     };
 
+		userContext.currentUser?.uid && getGroupChats();
 		userContext.currentUser?.uid && getUserImagee();
     userContext.currentUser?.uid && getChats();
-  }, [userContext, userContext.currentUser?.uid]);
+  }, [groupChats, userContext, userContext.currentUser?.uid]);
 
 	const handleSelect = (u : any) => {
 		dispatch({type: "CHANGE_USER", payload: u})
 	}
 	
+	const handleSelectGroupChats = async (u : any) => {
+		const docRef = doc(db, "groupChats", u.id);
+    const docSnap = await getDoc(docRef)
+		
+		dispatchGroupChats({type: "CHANGE_CHATS", payload: docSnap.data()})
+	}
 	
 
 	if(isOpen == false){
@@ -76,9 +97,12 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 	}
 
 	const sidebarContent = (
-		<div className="sidebar__content">
+		<div className="sidebar__content" onClick={() => {
+			console.log(ChatState.Users)
+			console.log(groupChats)
+		}}>
 			<div className="sidebar__info sidebar-info">
-				<SelectUsersModal/>
+				<SelectUsersModal chats={chats}/>
 				<div className="sidebar-info__text">Личные сообщения</div>
 				<div className="sidebar-info__button" onClick={() => {
 					selectedUsersModal.onToggle(selectedUsersModal.isOpen)
@@ -97,6 +121,14 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 						{chat[1].userInfo?.photoURL ? <img loading="lazy" src={chat[1].userInfo?.photoURL} alt=""/> : <BsDiscord size={20} color='white'/>}
 					</div>
 					<div className="">{chat[1].userInfo?.displayName}</div>
+				</div>
+			))}
+			{chats && Object.entries(groupChats)?.map((chat, index) => (
+				<div 
+					key={groupChats[index].id}
+					onClick={() => handleSelectGroupChats(groupChats[index])}
+				>
+					{groupChats[index].id}
 				</div>
 			))}
 		</div>

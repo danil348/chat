@@ -47,7 +47,7 @@
 	}
 
 	.user-dashboard {
-		border-radius: 4px;
+		border-radius: 10px;
 		overflow: hidden;
 		width: 660px;
 		display: flex;
@@ -72,14 +72,35 @@
 			}
 		}
 		.userInfo-dashboard__image {
-			@media (any-hover: hover){
-				&:hover{
-					.userInfo-image__input{
+			.userInfo-dashboard__accept {
+				position: absolute;
+				width: calc(100% + 8px);
+				border-radius: 100%;
+				top: -4px;
+				left: -4px;
+				height: calc(100% + 8px);
+				background-color: $text-grean-2;
+				.userInfo-dashboard__acceptButton {
+					position: absolute;
+					width: 30px;
+					background-color: $text-grean-2;
+					height: 30px;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					border-radius: 100%;
+					right: -6px;
+					cursor: pointer;
+					bottom: -6px;
+				}
+			}
+
+			.userInfo-image__input {
+				@media (any-hover: hover) {
+					&:hover {
 						opacity: 0.6;
 					}
 				}
-			}
-			.userInfo-image__input {
 				cursor: pointer;
 				position: absolute;
 				width: 101%;
@@ -109,6 +130,43 @@
 				left: 0;
 				object-fit: cover;
 				border-radius: 100%;
+			}
+		}
+
+		.userData-dashboard {
+			display: flex;
+			flex-direction: column;
+			gap: 24px;
+			.userData-dashboard__item {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+
+				.dashboard-item__title {
+					font-size: 13px;
+					color: $textColor-opacity-1;
+					line-height: 16px;
+					margin-bottom: 4px;
+				}
+
+				.dashboard-item__button {
+					transition: all 0.3s ease 0s;
+					cursor: pointer;
+					height: 32px;
+					background-color: $bg-dark-12;
+					border-radius: 3px;
+					font-size: 14px;
+					line-height: 16px;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					width: 93px;
+					@media (any-hover: hover) {
+						&:hover {
+							background-color: $bg-dark-13;
+						}
+					}
+				}
 			}
 		}
 	}

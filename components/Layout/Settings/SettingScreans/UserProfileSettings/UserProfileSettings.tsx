@@ -1,11 +1,14 @@
 import { db, storage } from "@/firebase";
 import {
-	doc, DocumentData, onSnapshot,
+	DocumentData,
+	doc,
+	onSnapshot,
 	serverTimestamp,
 	updateDoc
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useEffect, useState } from "react";
+import { AiOutlineCheck } from "react-icons/ai";
 import { RiImageLine } from "react-icons/ri";
 import { v4 as uuid } from "uuid";
 import { AuthContext } from "../../../../../context/AuthContext";
@@ -79,11 +82,18 @@ const UserProfileSettings = () => {
 				<div className="user-dashboard__color"></div>
 				<div className="user-dashboard__info userInfo-dashboard">
 					<div className="userInfo-dashboard__image">
-					<input required style={{ display: "none" }} type="file" id="file" 
-						onChange={(e) => {
-							if(e.target.files){
-								setImg(e.target.files[0])
-							}
+						{img && 
+							<div className="userInfo-dashboard__accept">
+								<div className="userInfo-dashboard__acceptButton" onClick={handleSend}>
+									<AiOutlineCheck color="#000" size={20}/>
+								</div>
+							</div>
+						}
+						<input required style={{ display: "none" }} type="file" id="file" 
+							onChange={(e) => {
+								if(e.target.files){
+									setImg(e.target.files[0])
+								}
 						}}/>
 						<label className="userInfo-image__input" htmlFor="file">
 							<RiImageLine size={30} color="white"/>
@@ -106,8 +116,6 @@ const UserProfileSettings = () => {
 					</div>
 				</div>
 			</div>
-			
-					<button onClick={handleSend} >Sign up</button>
 		</div>
 	)
 }

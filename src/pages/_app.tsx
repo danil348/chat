@@ -21,14 +21,17 @@ import '../../components/Modal/Modal.scss'
 import '../../components/modals/SearchModal/SearchModal.scss'
 import '../../components/Sidebar/Sidebar.scss'
 import '../../components/TopBar/TopBar.scss'
+import { GroupChatContextProvider } from '../../context/GroupChatContext'
 
 export default function App() {
   return (
     <AuthContextProvider>
       <ChatContextProvider>
-        <React.StrictMode>
-          <Home/>
-        </React.StrictMode>
+        <GroupChatContextProvider>
+          <React.StrictMode>
+            <Home/>
+          </React.StrictMode>
+        </GroupChatContextProvider>
       </ChatContextProvider>
     </AuthContextProvider>
   )
