@@ -26,9 +26,11 @@ const SelectUsersModal: React.FC<SelectUsersModalProps> = ({chats}) => {
 	const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
 
 	const handleCreateChat = async () => {
+		if(selectedUsers.length == 0){
+			return;
+		}
 		const uid = uuid();
 
-		console.log(uid)
 		await setDoc(doc(db, "groupChats", uid), { messages: [], Users: [] });
 		await updateDoc(doc(db, "groupChats", uid), { 
 			ChatsInfo: arrayUnion({
@@ -56,22 +58,35 @@ const SelectUsersModal: React.FC<SelectUsersModalProps> = ({chats}) => {
 		
 
 		await updateDoc(doc(db, "users", userContext.currentUser.uid), {
-			groupChats: arrayUnion({
+			["groupChats." + uid]: {
 				id: uid,
 				name: "foo",
 				usersCount: selectedUsers.length + 1
-			}),
+			},
+			["groupChats." + uid+ ".users"]: arrayUnion({
+				name: userContext.currentUser.name
+			})
 		});
 		
 
+
 		Object.entries(chats)?.map(async (chat, index) => {
 			if(selectedUsers.includes(index)){
+				await updateDoc(doc(db, "users", userContext.currentUser.uid), {
+					["groupChats." + uid+ ".users"]: arrayUnion({
+						name: chat[1].userInfo?.displayName
+					})
+				});
+
 				await updateDoc(doc(db, "users", chat[1].userInfo?.uid), {
-					groupChats: arrayUnion({
+					["groupChats." + uid]: {
 						id: uid,
 						name: "foo",
 						usersCount: selectedUsers.length + 1
-					}),
+					},
+					["groupChats." + uid+ ".users"]: arrayUnion({
+						name: userContext.currentUser.name
+					})
 				});
 
 				if(chat[1].userInfo?.photoURL){
@@ -90,8 +105,20 @@ const SelectUsersModal: React.FC<SelectUsersModalProps> = ({chats}) => {
 						})
 					});
 				}
+
+				Object.entries(chats)?.map(async (pchat, pindex) => {
+					if(selectedUsers.includes(pindex)){
+						await updateDoc(doc(db, "users", chat[1].userInfo?.uid), {
+							["groupChats." + uid+ ".users"]: arrayUnion({
+								name: pchat[1].userInfo?.displayName
+							})
+						});
+					}
+				})
 			}
 		})
+		setSelectedUsers([])
+		setSelectedUserCount(0)
 	}
 
 	const handleKey = (e: React.KeyboardEvent) => {
@@ -100,28 +127,29 @@ const SelectUsersModal: React.FC<SelectUsersModalProps> = ({chats}) => {
 		}
 	}
 	
-	const  handleChange = async (state: boolean, index: number) => {
+	const  handleChange = async (index: number) => {
 		let copy = Object.assign([], selectedUsers)
-		if(state == true){
-			copy.push(index)
-			setSelectedUsers(copy)
-
-			setSelectedUserCount(selectedUserCount+1)
+		if(selectedUsers.includes(index) == false){
+			if(selectedUserCount < maxSelectedUser){
+				copy.push(index)
+				setSelectedUsers(copy)
+	
+				setSelectedUserCount(selectedUserCount+1)
+			}
 		}else{
 			if(copy.length == 1){
-				copy.length = 0;
-				setSelectedUsers(copy)
+				setSelectedUsers([])
 				
 				setSelectedUserCount(selectedUserCount-1)
 			}else{
-				copy = copy.splice(copy.indexOf(index) - 1, 1)
+				copy.splice(copy.indexOf(index), 1)
 				setSelectedUsers(copy)
 	
 				setSelectedUserCount(selectedUserCount-1)
 			}
 		}
   }
-
+	
 	if(selectedUsersModal.isOpen == false){
 		return null
 	}
@@ -141,21 +169,18 @@ const SelectUsersModal: React.FC<SelectUsersModalProps> = ({chats}) => {
 						 onKeyDown={(e: any) => handleKey(e)} 
 						 />
 			</div>
-			<div className="sidebar-selectUsersModal__users">
+			<div className="sidebar-selectUsersModal__users" >
 			{chats && Object.entries(chats)?.map((chat, index) => (
-				<SelectUserItem
-					freeUsersNumber={maxSelectedUser - selectedUserCount}
-					index={index}
-					onChange={handleChange}
-					key={chat[0]}
-					photoURL={chat[1].userInfo?.photoURL}
-					name={chat[1].userInfo?.displayName}
-				/>
+				<div className="sidebar__item sidebar-item" key={chat[0]} onClick={() => handleChange(index)} >
+					<SelectUserItem
+						photoURL={chat[1].userInfo?.photoURL}
+						name={chat[1].userInfo?.displayName}
+						selected={selectedUsers.includes(index)}
+					/>
+				</div>
 			))}
 			</div>
 			<div className="sidebar-selectUsersModal__CreateButton" onClick={() => {
-				console.log("Создание чата")
-				console.log(selectedUsers)
 				handleCreateChat()
 			}} >Создать лс</div>
 		</div>

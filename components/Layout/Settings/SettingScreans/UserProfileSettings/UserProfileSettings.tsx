@@ -26,17 +26,13 @@ const UserProfileSettings = () => {
 	const  currentUser = useContext(AuthContext);
 
 	useEffect(() => {
-    const getChats = () => {
-      const unsub = onSnapshot(doc(db, "userChats", userContext.currentUser?.uid), (doc) => {
-        setChats(doc.data() as DocumentData);
-      });
+    const imgUnsub = onSnapshot(doc(db, "userChats", userContext.currentUser?.uid), (doc) => {
+			setChats(doc.data() as DocumentData);
+		});
 
-      return () => {
-        unsub();
-      };
-    };
-
-    userContext.currentUser?.uid && getChats();
+		return () => {
+			imgUnsub();
+		};
   }, [userContext.currentUser?.uid]);
 	
 	if(userProfileSettings.isOpen == false){

@@ -33,30 +33,18 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 	const { dispatchGroupChats } = useContext(GroupChatContext);
   const { state } = useContext(ChatContext);
   const { ChatState } = useContext(GroupChatContext);
-
+	
 	useEffect(() => {
-    const getChats = () => {
-      const unsub = onSnapshot(doc(db, "userChats", userContext.currentUser?.uid), (doc) => {
-        setChats(doc.data() as DocumentData);
-      });
-
-      return () => {
-        unsub();
-      };
-    };
-
-		const getGroupChats = () => {
-			const unsub = onSnapshot(doc(db, "users", userContext.currentUser?.uid), (doc) => {
+		if(userContext.currentUser?.uid){
+			const unsub = onSnapshot(doc(db, "userChats", userContext?.currentUser?.uid), (doc) => {
+				setChats(doc.data() as DocumentData);
+			});
+			
+			const _unsub = onSnapshot(doc(db, "users", userContext.currentUser?.uid), (doc) => {
 				doc.exists() && setGroupChats(doc.data().groupChats);
 			});
 
-      return () => {
-        unsub();
-      };
-    };
-
-		const getUserImagee = () => {
-      const unsub = onSnapshot(doc(db, "users", userContext.currentUser?.uid), async (docs) => {
+			const __unsub = onSnapshot(doc(db, "users", userContext.currentUser?.uid), async (docs) => {
 				const docRef = doc(db, "users", userContext.currentUser?.uid);
 				const docSnap = await getDoc(docRef);
 				if(docSnap.data()?.photoURL){
@@ -68,17 +56,16 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 						photoURL: docSnap.data()?.photoURL
 					})
 				}
-      });
+			});
 
-      return () => {
-        unsub();
-      };
-    };
-
-		userContext.currentUser?.uid && getGroupChats();
-		userContext.currentUser?.uid && getUserImagee();
-    userContext.currentUser?.uid && getChats();
-  }, [groupChats, userContext, userContext.currentUser?.uid]);
+			return () => {
+				_unsub();
+				unsub();
+				__unsub();
+			};
+		}
+		
+  }, [userContext.currentUser?.uid]);
 
 	const handleSelect = (u : any) => {
 		dispatch({type: "CHANGE_USER", payload: u})
@@ -87,7 +74,7 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 	const handleSelectGroupChats = async (u : any) => {
 		const docRef = doc(db, "groupChats", u.id);
     const docSnap = await getDoc(docRef)
-		
+
 		dispatchGroupChats({type: "CHANGE_CHATS", payload: docSnap.data()})
 	}
 	
@@ -96,21 +83,29 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 		return null;
 	}
 
-	const sidebarContent = (
-		<div className="sidebar__content" onClick={() => {
-			console.log(ChatState.Users)
-			console.log(groupChats)
-		}}>
-			<div className="sidebar__info sidebar-info">
-				<SelectUsersModal chats={chats}/>
-				<div className="sidebar-info__text">Личные сообщения</div>
-				<div className="sidebar-info__button" onClick={() => {
-					selectedUsersModal.onToggle(selectedUsersModal.isOpen)
-				}}>
-					<AiOutlinePlus size={20} />
-					<div className="sidebar-info__prompt">Создать чат</div>
-				</div>
-			</div>
+	const GroupChatsContent = (
+		<>
+			{groupChats && Object.entries(groupChats)?.map((chat, index) => {
+					return (
+						<div 
+							key={index}
+							onClick={() => handleSelectGroupChats(chat[1])}
+						>
+							{chat[1].users && chat[1].users?.map((item: any, idx: number) => {
+								return (
+									<div className="" key={idx}>
+										{item.name}
+									</div>
+								)
+							})}
+						</div>
+					)
+				})}
+		</>
+	)
+
+	const ChatsContent = (
+		<>
 			{chats && Object.entries(chats)?.map(chat => (
 				<div 
 					className={chat[1].userInfo?.uid == state.user?.uid ? "sidebar__item sidebar-item selected" : "sidebar__item sidebar-item"} 
@@ -123,14 +118,23 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 					<div className="">{chat[1].userInfo?.displayName}</div>
 				</div>
 			))}
-			{chats && Object.entries(groupChats)?.map((chat, index) => (
-				<div 
-					key={groupChats[index].id}
-					onClick={() => handleSelectGroupChats(groupChats[index])}
-				>
-					{groupChats[index].id}
+		</>
+	)
+
+	const sidebarContent = (
+		<div className="sidebar__content">
+			<div className="sidebar__info sidebar-info">
+				<SelectUsersModal chats={chats}/>
+				<div className="sidebar-info__text">Личные сообщения</div>
+				<div className="sidebar-info__button" onClick={() => {
+					selectedUsersModal.onToggle(selectedUsersModal.isOpen)
+				}}>
+					<AiOutlinePlus size={20} />
+					<div className="sidebar-info__prompt">Создать чат</div>
 				</div>
-			))}
+			</div>
+			{ChatsContent}
+			{GroupChatsContent}
 		</div>
 	)
 
