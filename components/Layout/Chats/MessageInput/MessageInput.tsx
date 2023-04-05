@@ -1,10 +1,8 @@
 import { db, storage } from "@/firebase";
 import {
-  Timestamp,
   arrayUnion,
   doc,
-  serverTimestamp,
-  updateDoc,
+  serverTimestamp, Timestamp, updateDoc
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useState } from "react";
@@ -23,6 +21,7 @@ const Input = () => {
   const handleSend = async () => {
     if (img) {
       const storageRef = ref(storage, uuid());
+      
 			
 			uploadBytes(storageRef, img).then((snapshot) => {
 				getDownloadURL(snapshot.ref).then(async (downloadURL) => {
@@ -65,6 +64,13 @@ const Input = () => {
     setText("");
     setImg(null);
   };
+
+  const handleKey = (e: React.KeyboardEvent) => {
+		if(e.code == "Enter"){
+			handleSend()
+		}
+	}
+
   return (
     <>
       {state.user?.displayName && 
@@ -74,6 +80,7 @@ const Input = () => {
             placeholder={"Написать @" + state.user?.displayName}
             onChange={(e) => setText(e.target.value)}
             value={text}
+						onKeyDown={(e) => handleKey(e)} 
           />
           <input
               type="file"

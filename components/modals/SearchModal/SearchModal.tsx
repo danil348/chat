@@ -11,8 +11,8 @@ const SearchModal = () => {
   const userContext = useContext(AuthContext)
 
 	const [value, setValue] = useState<string>('')
-	const [user, setUser] = useState<DocumentData>({})
 	const [err, setErr] = useState(false);
+	const [user, setUser] = useState<DocumentData>({})
 	
 	if(searchModal.isOpen == false){
 		return null

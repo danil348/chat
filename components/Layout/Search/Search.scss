@@ -1,19 +1,43 @@
 @import '../../../src/styles/variables.scss';
 
-.search__wrapper {
-	width: 100%;
-	input {
+.searchModal__window {
+	.search__wrapper {
 		width: 100%;
-		background-color: $bg-dark-1;
-		height: 70px;
-		line-height: 70px;
-		padding: 0 12px;
-		font-size: 22px;
-		border-radius: 5px;
-		color: $textColor-opacity-2;
-
-		&::placeholder {
+		input {
+			width: 100%;
+			background-color: $bg-dark-1;
+			height: 70px;
+			line-height: 70px;
+			padding: 0 12px;
+			font-size: 22px;
+			border-radius: 5px;
 			color: $textColor-opacity-2;
+
+			&::placeholder {
+				color: $textColor-opacity-2;
+			}
+		}
+	}
+}
+
+.sidebar-selectUsersModal__input {
+	.search__wrapper {
+		width: 100%;
+		padding: 0;
+		margin-bottom: 20px;
+		input {
+			width: 100%;
+			background-color: $bg-dark-1;
+			height: 30px;
+			line-height: 32px;
+			padding: 0 8px;
+			font-size: 14px;
+			border-radius: 5px;
+			color: $textColor;
+
+			&::placeholder {
+				color: $textColor-opacity-2;
+			}
 		}
 	}
 }

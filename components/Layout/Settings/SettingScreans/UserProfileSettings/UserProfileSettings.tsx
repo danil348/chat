@@ -1,16 +1,16 @@
 import { db, storage } from "@/firebase";
 import {
-	DocumentData,
-	doc,
-	onSnapshot,
+	doc, DocumentData, onSnapshot,
 	serverTimestamp,
 	updateDoc
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useEffect, useState } from "react";
+import { RiImageLine } from "react-icons/ri";
 import { v4 as uuid } from "uuid";
 import { AuthContext } from "../../../../../context/AuthContext";
 import useUserProfileSettings from "../../../../../hooks/useUserProfileSettings";
+import DashboardItem from "./DashboardItem/DashboardItem";
 
 const UserProfileSettings = () => {
 	
@@ -73,16 +73,40 @@ const UserProfileSettings = () => {
   };
 
 	return (
-		<div>
-			<input required style={{ display: "none" }} type="file" id="file" 
-			onChange={(e) => {
-				if(e.target.files){
-					setImg(e.target.files[0])
-				}
-			}}/>
-          <label htmlFor="file">
-            <span>Add an avatar</span>
-          </label>
+		<div className="userProfileSettings">
+			<div className="userProfileSettings__title">Моя учётная запись</div>
+			<div className="userProfileSettings__UserDashboard user-dashboard">
+				<div className="user-dashboard__color"></div>
+				<div className="user-dashboard__info userInfo-dashboard">
+					<div className="userInfo-dashboard__image">
+					<input required style={{ display: "none" }} type="file" id="file" 
+						onChange={(e) => {
+							if(e.target.files){
+								setImg(e.target.files[0])
+							}
+						}}/>
+						<label className="userInfo-image__input" htmlFor="file">
+							<RiImageLine size={30} color="white"/>
+						</label>
+						{currentUser.currentUser?.photoURL && <img loading="lazy" src={currentUser.currentUser?.photoURL} alt=""/>}
+					</div>
+					<div className="userInfo-dashboard__name">
+					{currentUser.currentUser?.name && currentUser.currentUser?.name} 
+					<span> {"#" + currentUser.currentUser?.uid.slice(0, 4) + "..."} </span>
+					</div>
+					<div className="userInfo-dashboard__buttonWrapper">
+						<div className="userInfo-dashboard__button">Редактировать профиль пользователя</div>
+					</div>
+				</div>
+				<div className="user-dashboard__data userData-dashboard">
+					<div className="userData-dashboard">
+						<DashboardItem title="имя пользователя" text={currentUser.currentUser?.name + "#" + currentUser.currentUser?.uid.slice(0, 4) + "..."} buttonText="изменить" />
+						<DashboardItem title="электронная почта" text={currentUser.currentUser?.email} buttonText="изменить" />
+						<DashboardItem title="номер телефона" text="foo" buttonText="добавить" />
+					</div>
+				</div>
+			</div>
+			
 					<button onClick={handleSend} >Sign up</button>
 		</div>
 	)

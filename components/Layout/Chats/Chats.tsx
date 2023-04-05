@@ -68,6 +68,8 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 	const handleSelect = (u : any) => {
 		dispatch({type: "CHANGE_USER", payload: u})
 	}
+	
+	
 
 	if(isOpen == false){
 		return null;

@@ -15,11 +15,12 @@ import '../../components/Layout/Profile/Profile.scss'
 import '../../components/Layout/Search/Search.scss'
 import '../../components/Layout/Settings/Settings.scss'
 import '../../components/Layout/Settings/SettingsContent/SettingsContent.scss'
+import '../../components/Layout/Settings/SettingScreans/UserProfileSettings/UserProfileSettings.scss'
 import '../../components/Layout/Settings/SettingsSidebar/SettingsSidebar.scss'
 import '../../components/Modal/Modal.scss'
+import '../../components/modals/SearchModal/SearchModal.scss'
 import '../../components/Sidebar/Sidebar.scss'
 import '../../components/TopBar/TopBar.scss'
-import '../../components/modals/SearchModal/SearchModal.scss'
 
 export default function App() {
   return (

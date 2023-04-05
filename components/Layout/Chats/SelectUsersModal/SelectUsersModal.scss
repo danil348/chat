@@ -7,9 +7,58 @@
 	right: 18px;
 	background-color: $bg-dark-2;
 	padding: 16px;
-	transform: translate(100%,100%);
+	transform: translate(100%, 100%);
 	box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.2);
+
+	.sidebar-selectUsersModal__closeButton {
+		position: absolute;
+		right: 16px;
+		cursor: pointer;
+		top: 16px;
+	}
+
+	.sidebar-selectUsersModal__users {
+		height: 190px;
+		border-bottom: 1px solid $bg-dark-7;
+		overflow-y: scroll;
+		padding: 0 0 20px 0;
+		&::-webkit-scrollbar {
+			border-radius: 10px;
+			width: 3px; /* Remove scrollbar space */
+			background: transparent; /* Optional: just make scrollbar invisible */
+		}
+		/* Optional: show position indicator in red */
+		&::-webkit-scrollbar-thumb {
+			border-radius: 10px;
+			background: $bg-dark-11;
+		}
+	}
+
+	.sidebar-selectUsersModal__counter {
+		margin-top: 4px;
+		margin-bottom: 20px;
+	}
+
+	.sidebar-selectUsersModal__CreateButton {
+		padding: 2px 16px;
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 38px;
+		background-color: $bg-blue-1;
+		margin-top: 20px;
+		color: $textColor;
+		border-radius: 4px;
+		transition: all 0.3s ease 0s;
+		cursor: pointer;
+		@media (any-hover: hover) {
+			&:hover {
+				opacity: 0.9;
+			}
+		}
+	}
 }
-.sidebar-info{
+.sidebar-info {
 	position: relative;
 }
