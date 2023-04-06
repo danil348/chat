@@ -161,14 +161,19 @@
 		flex: 0 1 100%;
 		overflow-y: scroll;
 		padding: 16px 10px 20px 16px;
-		&::-webkit-scrollbar {
-			border-radius: 10px;
-			width: 7px; /* Remove scrollbar space */
+		.scrollbar-track {
+			right: 4px;
+			overflow: hidden;
+			top: 50%;
+			transform: translate(0,-50%);
+			height: 99%;
+			border-radius: 20px;
+			width: 8px; /* Remove scrollbar space */
 			background: $bg-dark-3; /* Optional: just make scrollbar invisible */
 		}
 		/* Optional: show position indicator in red */
-		&::-webkit-scrollbar-thumb {
-			border-radius: 10px;
+		.scrollbar-thumb {
+			border-radius: 20px;
 			background: $bg-dark-11;
 		}
 	}
