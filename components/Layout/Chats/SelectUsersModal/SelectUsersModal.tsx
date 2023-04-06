@@ -1,5 +1,5 @@
 import { db } from "@/firebase";
-import { DocumentData, arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, DocumentData, setDoc, updateDoc } from "firebase/firestore";
 import React, { useContext, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { v4 as uuid } from "uuid";
@@ -35,7 +35,8 @@ const SelectUsersModal: React.FC<SelectUsersModalProps> = ({chats}) => {
 		await updateDoc(doc(db, "groupChats", uid), { 
 			ChatsInfo: arrayUnion({
 				name: "foo",
-				usersCount: selectedUsers.length + 1
+				usersCount: selectedUsers.length + 1,
+				uid: uid
 			})
 		});
 

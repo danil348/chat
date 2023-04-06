@@ -1,16 +1,20 @@
 import { db } from "@/firebase";
-import { DocumentData, doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, DocumentData, getDoc, onSnapshot } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { BsDiscord } from "react-icons/bs";
+import { FiUsers } from "react-icons/fi";
 import { AuthContext } from "../../../context/AuthContext";
 import { ChatContext } from "../../../context/ChatContext";
 import { GroupChatContext } from "../../../context/GroupChatContext";
+import useGroupMessages from "../../../hooks/useGroupMessages";
+import useMessages from "../../../hooks/useMessages";
 import useSearchModal from "../../../hooks/useSearchModal";
 import useSelectUsersModal from "../../../hooks/useSelectUsersModal";
 import Sidebar from "../../Sidebar/Sidebar";
 import TopBar from "../../TopBar/TopBar";
 import Profile from "../Profile/Profile";
+import GroupMessages from "./GroupMessages/GroupMessages";
 import MessageInput from "./MessageInput/MessageInput";
 import Messages from "./Messeges/Messeges";
 import SelectUsersModal from "./SelectUsersModal/SelectUsersModal";
@@ -27,6 +31,8 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 
   const searchModal = useSearchModal()
   const selectedUsersModal = useSelectUsersModal()
+  const groupMessages = useGroupMessages()
+  const messages = useMessages()
 	
   const userContext = useContext(AuthContext)
 	const { dispatch } = useContext(ChatContext);
@@ -35,6 +41,15 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
   const { ChatState } = useContext(GroupChatContext);
 	
 	useEffect(() => {
+		if(ChatState.ChatsInfo?.uid){
+			const Unsube = onSnapshot(doc(db, "groupChats", ChatState.ChatsInfo?.uid), (doc) => {
+				doc.exists() && setGroupChats(doc.data().groupChats);
+			});
+
+			return () => {
+				Unsube()
+			}
+		}
 		if(userContext.currentUser?.uid){
 			const unsub = onSnapshot(doc(db, "userChats", userContext?.currentUser?.uid), (doc) => {
 				setChats(doc.data() as DocumentData);
@@ -72,6 +87,7 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 	}
 	
 	const handleSelectGroupChats = async (u : any) => {
+		
 		const docRef = doc(db, "groupChats", u.id);
     const docSnap = await getDoc(docRef)
 
@@ -88,17 +104,29 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 			{groupChats && Object.entries(groupChats)?.map((chat, index) => {
 					return (
 						<div 
-							key={index}
-							onClick={() => handleSelectGroupChats(chat[1])}
+							className="sidebar__item sidebar-item group-chats"
+							key={chat[0]}
+							onClick={() => {
+								handleSelectGroupChats(chat[1])
+								messages.onClose()
+								groupMessages.onOpen()
+							}}
+						>
+							<div className="group-chats__usersCount sidebar-item__image">
+								<FiUsers/>
+							</div>
+						<div
+							className="group-chats__names"
 						>
 							{chat[1].users && chat[1].users?.map((item: any, idx: number) => {
 								return (
-									<div className="" key={idx}>
-										{item.name}
-									</div>
+									<>
+										{item.name + " "}
+									</>
 								)
 							})}
 						</div>
+				</div>
 					)
 				})}
 		</>
@@ -110,7 +138,11 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 				<div 
 					className={chat[1].userInfo?.uid == state.user?.uid ? "sidebar__item sidebar-item selected" : "sidebar__item sidebar-item"} 
 					key={chat[0]}
-					onClick={() => handleSelect(chat[1].userInfo)}
+					onClick={() => {
+						handleSelect(chat[1].userInfo)
+						groupMessages.onClose()
+						messages.onOpen()
+					}}
 				>
 					<div className="sidebar-item__image" >
 						{chat[1].userInfo?.photoURL ? <img loading="lazy" src={chat[1].userInfo?.photoURL} alt=""/> : <BsDiscord size={20} color='white'/>}
@@ -158,7 +190,8 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 			<Sidebar content={sidebarContent} profile={profile} searchInput={searchContent}/>
 			<div className="chat">
 				<TopBar profile={state.user}/>
-				<Messages/>
+				{messages.isOpen && <Messages/>} 
+				{groupMessages.isOpen && <GroupMessages/>}
 				<div className="chatInput__wrapper">
 					<MessageInput/>
 				</div>

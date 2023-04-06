@@ -2,6 +2,7 @@ import { db, storage } from "@/firebase";
 import {
   arrayUnion,
   doc,
+  getDoc,
   serverTimestamp, Timestamp, updateDoc
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -10,15 +11,23 @@ import { RiImageLine, RiMailSendLine } from "react-icons/ri";
 import { v4 as uuid } from "uuid";
 import { AuthContext } from "../../../../context/AuthContext";
 import { ChatContext } from "../../../../context/ChatContext";
+import { GroupChatContext } from "../../../../context/GroupChatContext";
+import useGroupMessages from "../../../../hooks/useGroupMessages";
+import useMessages from "../../../../hooks/useMessages";
 
 const Input = () => {
   const [text, setText] = useState("");
   const [img, setImg] = useState<File | null>(null);
   
+	const { dispatchGroupChats } = useContext(GroupChatContext);
   const  currentUser = useContext(AuthContext);
   const { state } = useContext(ChatContext);
+  const { ChatState } = useContext(GroupChatContext);
+  
+  const groupMessages = useGroupMessages()
+  const messages = useMessages()
 
-  const handleSend = async () => {
+  const setMessages = async () => {
     if (img) {
       const storageRef = ref(storage, uuid());
       
@@ -63,6 +72,45 @@ const Input = () => {
 
     setText("");
     setImg(null);
+  }
+
+  const setGroupMessage = async () => {
+    if(currentUser.currentUser?.photoURL){
+      await updateDoc(doc(db, "groupChats", ChatState.ChatsInfo?.uid), { 
+        messages: arrayUnion({
+          id: uuid(),
+          text,
+          senderId: currentUser.currentUser?.uid,
+          date: Timestamp.now(),
+          img: currentUser.currentUser?.photoURL,
+        })
+      });
+    }else{
+      console.log(ChatState)
+      await updateDoc(doc(db, "groupChats", ChatState.ChatsInfo?.uid), { 
+        messages: arrayUnion({
+          id: uuid(),
+          text,
+          senderId: currentUser.currentUser?.uid,
+          date: Timestamp.now()
+        })
+      });
+    }
+  }
+
+  const handleSend = async () => {
+    if(messages.isOpen){
+      console.log("send messages")
+      setMessages()
+    }else if(groupMessages.isOpen){
+      console.log("send groupMessages")
+      setGroupMessage()
+
+
+      const docRef = doc(db, "groupChats", ChatState.ChatsInfo.uid);
+      const docSnap = await getDoc(docRef)
+		  dispatchGroupChats({type: "CHANGE_CHATS", payload: docSnap.data()})
+    }
   };
 
   const handleKey = (e: React.KeyboardEvent) => {
@@ -73,7 +121,7 @@ const Input = () => {
 
   return (
     <>
-      {state.user?.displayName && 
+      {(groupMessages || messages) && 
         <div className="input">
           <input
             type="text"

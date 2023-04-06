@@ -1,6 +1,16 @@
 @import '../../../src/styles/variables.scss';
 
 .chats__container {
+	.group-chats {
+		&__names {
+			width: inherit;
+			max-width: 224px;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+	}
+
 	.chat {
 		background-color: $bg-dark-2;
 	}
@@ -10,6 +20,7 @@
 		padding: 8px;
 	}
 	.sidebar__content {
+		max-width: 240px;
 		display: flex;
 		flex-direction: column;
 		gap: 2px;
@@ -72,7 +83,7 @@
 			align-items: center;
 		}
 		.sidebar-item__image {
-			width: 32px;
+			flex: 0 0 32px;
 			background-color: $bg-dark-7;
 			height: 32px;
 			border-radius: 100%;
