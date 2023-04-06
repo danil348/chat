@@ -23,17 +23,10 @@ const Message = ({ message } : any) => {
 				<p>{message.senderId}</p>
         <p>{message.text}</p>
       </div>
-
-
-
 			<div className="messageContent">
         {message.img && <img src={message.img} alt="" />}
       </div>
-
-		
     </div>
-
-		
   );
 };
 

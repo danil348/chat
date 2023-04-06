@@ -119,11 +119,7 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 							className="group-chats__names"
 						>
 							{chat[1].users && chat[1].users?.map((item: any, idx: number) => {
-								return (
-									<>
-										{item.name + " "}
-									</>
-								)
+								return item.name + " "
 							})}
 						</div>
 				</div>

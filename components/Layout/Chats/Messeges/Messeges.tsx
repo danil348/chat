@@ -4,7 +4,6 @@ import { useContext, useEffect, useState } from "react";
 import { ChatContext } from "../../../../context/ChatContext";
 import Message from "../Messege/Messege";
 
-
 const Messages = () => {
   const [messages, setMessages] = useState([]);
 

@@ -1,9 +1,9 @@
 import { db } from "@/firebase";
 import {
 	doc,
-	getDoc, onSnapshot
+	onSnapshot
 } from "firebase/firestore";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GroupChatContext } from "../../../../context/GroupChatContext";
 
 interface GroupMessagesProps {
@@ -12,35 +12,31 @@ interface GroupMessagesProps {
 
 const GroupMessages: React.FC<GroupMessagesProps> = () => {
 	const { dispatchGroupChats } = useContext(GroupChatContext);
-	
   const { ChatState } = useContext(GroupChatContext);
-	
+
+	const [messages, setMessages] = useState([]);
+
 	useEffect(() => {
 		if(ChatState.ChatsInfo?.uid){
-			const docRef = doc(db, "groupChats", ChatState.ChatsInfo?.uid);
-
-			const unSub = onSnapshot(doc(db, "groupChats", ChatState.ChatsInfo?.uid), async (doc) => {
-				const docSnap = await getDoc(docRef)
-				dispatchGroupChats({type: "CHANGE_CHATS", payload: docSnap.data()})
+			const unSub = onSnapshot(doc(db, "groupChats", ChatState.ChatsInfo?.uid), (doc) => {
+				doc.exists() && setMessages(doc.data().messages);
 			});
 	
 			return () => {
 				unSub();
 			};
 		}
-
-  }, [ChatState]);
+  }, [ChatState.ChatsInfo?.uid]);
+	
 
 	return (
 		<div className="messages">
-			{ChatState.messages && Object.entries(ChatState.messages)?.map((message: any, index: number) => {
+			{messages && Object.entries(messages)?.map((message: any, index: number) => {
 				console.log()
 				return (
-					<>
-					<div className="">
+					<div className="" key={index}>
 						{message[1]?.text}
 					</div>
-					</>
 				)
 			})}
 		</div>
