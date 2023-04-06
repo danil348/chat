@@ -85,13 +85,13 @@ const UserProfileSettings = () => {
 								</div>
 							</div>
 						}
-						<input required style={{ display: "none" }} type="file" id="file" 
+						<input required style={{ display: "none" }} type="file" id="userImageInput" 
 							onChange={(e) => {
 								if(e.target.files){
 									setImg(e.target.files[0])
 								}
 						}}/>
-						<label className="userInfo-image__input" htmlFor="file">
+						<label className="userInfo-image__input" htmlFor="userImageInput">
 							<RiImageLine size={30} color="white"/>
 						</label>
 						{currentUser.currentUser?.photoURL && <img loading="lazy" src={currentUser.currentUser?.photoURL} alt=""/>}

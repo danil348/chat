@@ -104,7 +104,7 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 			{groupChats && Object.entries(groupChats)?.map((chat, index) => {
 					return (
 						<div 
-							className="sidebar__item sidebar-item group-chats"
+							className={groupMessages.isOpen && (chat[0] == ChatState.ChatsInfo.uid) ? "group-chats sidebar__item sidebar-item selected" : "group-chats sidebar__item sidebar-item"} 
 							key={chat[0]}
 							onClick={() => {
 								handleSelectGroupChats(chat[1])
@@ -113,14 +113,17 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 							}}
 						>
 							<div className="group-chats__usersCount sidebar-item__image">
-								<FiUsers/>
+								<FiUsers color="white" size={20}/>
 							</div>
 						<div
 							className="group-chats__names"
 						>
-							{chat[1].users && chat[1].users?.map((item: any, idx: number) => {
-								return item.name + " "
-							})}
+							<div className="group-chats__name">
+								{chat[1].users && chat[1].users?.map((item: any, idx: number) => {
+									return item.name + ", "
+								})}
+							</div>
+							<div className="group-chats__usersCount">{chat[1].usersCount} участников</div>
 						</div>
 				</div>
 					)
@@ -132,7 +135,7 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 		<>
 			{chats && Object.entries(chats)?.map(chat => (
 				<div 
-					className={chat[1].userInfo?.uid == state.user?.uid ? "sidebar__item sidebar-item selected" : "sidebar__item sidebar-item"} 
+					className={messages.isOpen && (chat[1].userInfo?.uid == state.user?.uid) ? "sidebar__item sidebar-item selected" : "sidebar__item sidebar-item"} 
 					key={chat[0]}
 					onClick={() => {
 						handleSelect(chat[1].userInfo)

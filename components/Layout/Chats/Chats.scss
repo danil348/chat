@@ -111,7 +111,13 @@
 		@media (any-hover: hover) {
 			&:hover {
 				background-color: $bg-dark-8;
+				color: $textColor;
 			}
+		}
+		.group-chats__usersCount{
+			font-size: 12px;
+			line-height: 16px;
+			font-weight: 500;
 		}
 	}
 	.search__wrapper {
