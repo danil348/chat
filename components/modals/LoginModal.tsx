@@ -1,7 +1,7 @@
 import { auth, db } from "@/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import useChats from "../../hooks/useChats";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
@@ -21,51 +21,8 @@ const LoginModal = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { setItem } = useLocalStorage();
-  const { getItem } = useLocalStorage();
   
   const userContext = useContext(AuthContext)
-
-  useEffect(() => {
-    const login = async () => {
-      try {
-        const _password = getItem('password');
-        const _email = getItem('email');
-
-        if (_password && _email) {
-          
-          const res = await signInWithEmailAndPassword(auth, _email as string, _password as string);
-        
-          const docRef = doc(db, "users", res.user.uid);
-          const docSnap = await getDoc(docRef);
-
-          if(docSnap.data()?.photoURL){
-            userContext.setCurrentUser({
-              name: docSnap.data()?.username,
-              displayName: docSnap.data()?.displayName,
-              email: docSnap.data()?.email,
-              uid: docSnap.data()?.uid,
-              photoURL: docSnap.data()?.photoURL
-            })
-          }else{
-            userContext.setCurrentUser({
-              name: docSnap.data()?.username,
-              displayName: docSnap.data()?.displayName,
-              email: docSnap.data()?.email,
-              uid: docSnap.data()?.uid,
-            })
-          }
-
-          loginModal.onClose()
-        }
-      } catch (error) {
-        console.log("🚀 ~ file: LoginModal.tsx:16 ~ onSubmit ~ error:", error)
-      }
-    }
-
-    if(loginModal.isOpen){
-      login();
-    }
-  }, [email, getItem, loginModal, password, registerModal, userContext]);
 
   const onSubmit = useCallback(async () => {
 		try {

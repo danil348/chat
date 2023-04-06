@@ -1,10 +1,13 @@
 import '@/styles/globals.scss'
 
-import React from 'react'
-import { AuthContextProvider } from '../../context/AuthContext'
+import React, { useContext, useEffect } from 'react'
+import { AuthContext, AuthContextProvider } from '../../context/AuthContext'
 import { ChatContextProvider } from '../../context/ChatContext'
 import Home from '../pages/index'
 
+import { auth, db } from '@/firebase'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
 import '../../components/Button/Button.scss'
 import '../../components/Input/Input.scss'
 import '../../components/Layout/Chats/Chats.scss'
@@ -22,8 +25,12 @@ import '../../components/modals/SearchModal/SearchModal.scss'
 import '../../components/Sidebar/Sidebar.scss'
 import '../../components/TopBar/TopBar.scss'
 import { GroupChatContextProvider } from '../../context/GroupChatContext'
+import { useLocalStorage } from '../../hooks/useLocalStorage'
+import useRegisterModal from '../../hooks/useRegisterModal'
 
 export default function App() {
+  
+
   return (
     <AuthContextProvider>
       <ChatContextProvider>
