@@ -3,6 +3,7 @@ import '@/styles/globals.scss'
 import React from 'react'
 import { AuthContextProvider } from '../../context/AuthContext'
 import { ChatContextProvider } from '../../context/ChatContext'
+import { GroupChatContextProvider } from '../../context/GroupChatContext'
 import Home from '../pages/index'
 
 import '../../components/Button/Button.scss'
@@ -22,10 +23,8 @@ import '../../components/Modal/Modal.scss'
 import '../../components/modals/SearchModal/SearchModal.scss'
 import '../../components/Sidebar/Sidebar.scss'
 import '../../components/TopBar/TopBar.scss'
-import { GroupChatContextProvider } from '../../context/GroupChatContext'
 
 export default function App() {
-  
 
   return (
     <AuthContextProvider>

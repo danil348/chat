@@ -27,9 +27,13 @@ const Message: React.FC<MessageProps> = ({message, index, messages}) => {
   const [text, setText] = useState(message.text);
   const [edit, setEdit] = useState(false);
 
-  const icons = ["🔥", "👍", "👎","🤮", "🤬", "💩", "😱"]
+  const icons = ["🔥", "👍", "👎","🤮", "🤬", "💩", "😱", "💦",
+                 "🆗","💕","🤤", "😩", "🥵", "🥰", "💉", "💙",
+                 "💚", "💛", "💜", "💝", "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "🐵", "🐽",
+                 "🐭", "🦔", "🐓","👀", "👅","👄","(*^‿^*)",
+                 "(◕‿◕)", "o (≧▽≦)o", "(´｡• ᵕ •｡`)"]
   const spoilerIcon = "❤️"
-
+  
   const deleteMessage = async () => {
     if(groupMessagesState.isOpen){
       try {
@@ -128,11 +132,17 @@ const Message: React.FC<MessageProps> = ({message, index, messages}) => {
 
   const reactions = (
     <div className="reactions__wrapper">
+    <div 
+      className="reactions__spoiler"
+      onClick={() => sendReaction(icons.length)}
+    >
+      {spoilerIcon}
+    </div>
       <div className="reactions__content">
         {icons.map((icon, idx) => {
           return (
               <div 
-                className="reactions__item" 
+                className={icon.length > 2 && icon.length < 14  ? "reactions__item long": "reactions__item"} 
                 key={idx}
                 onClick={() => sendReaction(idx)}
               >
@@ -141,12 +151,20 @@ const Message: React.FC<MessageProps> = ({message, index, messages}) => {
           )
         })}
       </div>
-      <div 
-        className="reactions__spoiler"
-        onClick={() => sendReaction(icons.length)}
-      >
-        {spoilerIcon}
-      </div>
+    </div>
+  )
+
+  const reactionsCounters = (
+    <div className="message__reactions message-reactions">
+      {message.reactions && Object.entries(message.reactions).map((reaction: any, idx) => {
+        console.log(reaction)
+        return (
+          <div className="message-reactions__item" key={idx}>
+            {+reaction[0] == icons.length ?  <div className="">{spoilerIcon}</div> : <div className="">{icons[+reaction[0]]}</div> }
+            <div className="">{reaction[1]}</div>
+          </div>
+        )
+      })}
     </div>
   )
 
@@ -188,9 +206,10 @@ const Message: React.FC<MessageProps> = ({message, index, messages}) => {
               name="" id="" value={text} onChange={(e) =>  changeText(e)}></textarea>
           </div>
         </div>
-      </div>
-			<div className="messageContent">
-        {message.img && <img src={message.img} alt="" />}
+        <div className="message__image">
+          {message.img && <img src={message.img} alt="" />}
+        </div>
+        {reactionsCounters}
       </div>
     </div>
   );

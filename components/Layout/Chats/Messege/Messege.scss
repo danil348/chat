@@ -1,8 +1,12 @@
 @import '../../../../src/styles/variables.scss';
 
 .message {
-	&.owner{
-		.reactions__wrapper{
+	position: relative;
+	&:not(:nth-child(1)) {
+		margin-top: 50px;
+	}
+	&.owner {
+		.reactions__wrapper {
 			display: none;
 		}
 	}
@@ -95,32 +99,46 @@
 			align-items: center;
 		}
 	}
-	
-	@media (any-hover: hover){
-		&:hover{
-			.reactions__wrapper{
+
+	@media (any-hover: hover) {
+		&:hover {
+			.reactions__wrapper {
 				opacity: 1;
 				visibility: visible;
-			}		
+			}
 		}
 	}
 }
 
+.message {
+	&:last-child {
+		.reactions__wrapper {
+			top: 0;
+			.reactions__content {
+			}
+		}
+	}
+}
 
 .reactions__wrapper {
+	z-index: 30;
 	transition: all 0.3s ease 0s;
 	opacity: 0;
 	visibility: hidden;
 	background-color: $bg-dark-1;
 	border-radius: 20px;
-	padding: 3px;
+	padding: 1px 3px;
 	position: absolute;
 	display: flex;
-	right: 0;
+	left: 0;
+	top: calc(100% + 4px);
 	@media (any-hover: hover) {
 		&:hover {
+			border-radius: 10px;
 			.reactions__content {
 				display: flex;
+				flex-wrap: wrap;
+				max-width: 300px;
 			}
 		}
 	}
@@ -130,17 +148,44 @@
 	.reactions__spoiler,
 	.reactions__item,
 	.reaction__edit {
-		width: 30px;
+		min-width: 30px;
 		height: 30px;
 		display: flex;
+		color: $textColor;
 		justify-content: center;
 		cursor: pointer;
 		transition: all 0.3s ease 0s;
 		align-items: center;
+		&.long {
+			padding: 0 7px;
+			@media (any-hover: hover) {
+				&:hover {
+					transform: scale(1.05);
+				}
+			}
+		}
 		@media (any-hover: hover) {
 			&:hover {
 				transform: scale(1.3);
 			}
 		}
+	}
+}
+
+.message__reactions {
+	display: flex;
+	flex-wrap: wrap;
+	max-width: 40%;
+	gap: 5px;
+	.message-reactions__item {
+		padding: 1px 10px;
+		background-color: $bg-dark-1;
+		display: flex;
+		border-radius: 20px;
+		gap: 6px;
+		justify-content: center;
+		align-items: center;
+		color: $textColor;
+		height: 30px;
 	}
 }
