@@ -27,6 +27,9 @@ const Message: React.FC<MessageProps> = ({message, index, messages}) => {
   const [text, setText] = useState(message.text);
   const [edit, setEdit] = useState(false);
 
+  const icons = ["🔥", "👍", "👎","🤮", "🤬", "💩", "😱"]
+  const spoilerIcon = "❤️"
+
   const deleteMessage = async () => {
     if(groupMessagesState.isOpen){
       try {
@@ -82,10 +85,76 @@ const Message: React.FC<MessageProps> = ({message, index, messages}) => {
     }
   }
 
+  const sendReaction = async (idx: number) => {
+    if(groupMessagesState.isOpen){
+      const newMessages = messages as any;
+       
+      if(newMessages[index].reactions[idx]){
+        const newObj = {} as any
+        newObj[idx] = newMessages[index].reactions[idx] + 1
+        Object.assign(newMessages[index].reactions, newObj);
+        await updateDoc(doc(db, "groupChats", ChatState.ChatsInfo?.uid), { 
+          messages: newMessages as Object 
+        }); 
+      }else{
+        const newObj = {} as any
+        newObj[idx] = 1
+        Object.assign(newMessages[index].reactions, newObj);
+        await updateDoc(doc(db, "groupChats", ChatState.ChatsInfo?.uid), { 
+          messages: newMessages as Object 
+        }); 
+      }
+    }
+    if(messagesState.isOpen){
+      const newMessages = messages as any;
+
+      if(newMessages[index].reactions[idx]){
+        const newObj = {} as any
+        newObj[idx] = newMessages[index].reactions[idx] + 1
+        Object.assign(newMessages[index].reactions, newObj);
+        await updateDoc(doc(db, "chats", state.chatId), { 
+          messages: newMessages as Object 
+        }); 
+      }else{
+        const newObj = {} as any
+        newObj[idx] = 1
+        Object.assign(newMessages[index].reactions, newObj);
+        await updateDoc(doc(db, "chats", state.chatId), { 
+          messages: newMessages as Object 
+        }); 
+      }      
+    }
+  }
+
+  const reactions = (
+    <div className="reactions__wrapper">
+      <div className="reactions__content">
+        {icons.map((icon, idx) => {
+          return (
+              <div 
+                className="reactions__item" 
+                key={idx}
+                onClick={() => sendReaction(idx)}
+              >
+                {icon}
+              </div>
+          )
+        })}
+      </div>
+      <div 
+        className="reactions__spoiler"
+        onClick={() => sendReaction(icons.length)}
+      >
+        {spoilerIcon}
+      </div>
+    </div>
+  )
+
 	return (
     <div
       className={message.senderId === currentUser.currentUser.uid && "owner" ? "message owner" : "message neighbor"}
     >
+      {reactions}
       <div className="message__buttons message-buttons">
         <div className="message-buttons__delete message-button" onClick={deleteMessage}>
           <AiFillDelete color="#f23f42" size={20}/>

@@ -1,6 +1,11 @@
 @import '../../../../src/styles/variables.scss';
 
 .message {
+	&.owner{
+		.reactions__wrapper{
+			display: none;
+		}
+	}
 	&.neighbor {
 		.message-buttons {
 			display: none;
@@ -88,6 +93,54 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
+		}
+	}
+	
+	@media (any-hover: hover){
+		&:hover{
+			.reactions__wrapper{
+				opacity: 1;
+				visibility: visible;
+			}		
+		}
+	}
+}
+
+
+.reactions__wrapper {
+	transition: all 0.3s ease 0s;
+	opacity: 0;
+	visibility: hidden;
+	background-color: $bg-dark-1;
+	border-radius: 20px;
+	padding: 3px;
+	position: absolute;
+	display: flex;
+	right: 0;
+	@media (any-hover: hover) {
+		&:hover {
+			.reactions__content {
+				display: flex;
+			}
+		}
+	}
+	.reactions__content {
+		display: none;
+	}
+	.reactions__spoiler,
+	.reactions__item,
+	.reaction__edit {
+		width: 30px;
+		height: 30px;
+		display: flex;
+		justify-content: center;
+		cursor: pointer;
+		transition: all 0.3s ease 0s;
+		align-items: center;
+		@media (any-hover: hover) {
+			&:hover {
+				transform: scale(1.3);
+			}
 		}
 	}
 }

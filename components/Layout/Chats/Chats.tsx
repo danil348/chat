@@ -120,7 +120,7 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 						>
 							<div className="group-chats__name">
 								{chat[1].users && chat[1].users?.map((item: any, idx: number) => {
-									return item.name + ", "
+									return (Object.entries(chat[1].users).length - 1) ==  idx ? item.name : item.name + ", "
 								})}
 							</div>
 							<div className="group-chats__usersCount">{chat[1].usersCount} участников</div>

@@ -41,7 +41,8 @@ const Input = () => {
                 senderId: currentUser.currentUser.uid,
                 date: Timestamp.now(),
                 img: downloadURL,
-                userPhotoURL: currentUser.currentUser?.photoURL
+                userPhotoURL: currentUser.currentUser?.photoURL,
+                reactions: {}
               }),
             });
           }else{
@@ -52,6 +53,7 @@ const Input = () => {
                 senderId: currentUser.currentUser.uid,
                 date: Timestamp.now(),
                 img: downloadURL,
+                reactions: {}
               }),
             });
           }
@@ -66,7 +68,8 @@ const Input = () => {
               text,
               senderId: currentUser.currentUser.uid,
               date: Timestamp.now(),
-              userPhotoURL: currentUser.currentUser?.photoURL
+              userPhotoURL: currentUser.currentUser?.photoURL,
+              reactions: {}
             }),
           });
         }else{
@@ -76,6 +79,7 @@ const Input = () => {
               text,
               senderId: currentUser.currentUser.uid,
               date: Timestamp.now(),
+              reactions: {}
             }),
           });
         }
@@ -116,7 +120,8 @@ const Input = () => {
                 senderId: currentUser.currentUser?.uid,
                 date: Timestamp.now(),
                 img: downloadURL,
-                userPhotoURL: currentUser.currentUser?.photoURL
+                userPhotoURL: currentUser.currentUser?.photoURL,
+                reactions: {}
               })
             }); 
           }else{
@@ -127,6 +132,7 @@ const Input = () => {
                 senderId: currentUser.currentUser?.uid,
                 date: Timestamp.now(),
                 img: downloadURL,
+                reactions: {}
               })
             });
           }
@@ -141,7 +147,8 @@ const Input = () => {
               text,
               senderId: currentUser.currentUser?.uid,
               date: Timestamp.now(),
-              userPhotoURL: currentUser.currentUser?.photoURL
+              userPhotoURL: currentUser.currentUser?.photoURL,
+              reactions: {}
             })
           });
         }else{
@@ -150,7 +157,8 @@ const Input = () => {
               id: uuid(),
               text,
               senderId: currentUser.currentUser?.uid,
-              date: Timestamp.now()
+              date: Timestamp.now(),
+              reactions: {}
             })
           });
         }
