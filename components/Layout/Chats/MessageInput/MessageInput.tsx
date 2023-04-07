@@ -1,11 +1,9 @@
 import { db, storage } from "@/firebase";
 import {
-  Timestamp,
   arrayUnion,
   doc,
   getDoc,
-  serverTimestamp,
-  updateDoc
+  serverTimestamp, Timestamp, updateDoc
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useState } from "react";
@@ -32,30 +30,55 @@ const Input = () => {
   const setMessages = async () => {
     if (img) {
       const storageRef = ref(storage, uuid());
-			
+
 			uploadBytes(storageRef, img).then((snapshot) => {
 				getDownloadURL(snapshot.ref).then(async (downloadURL) => {
-					await updateDoc(doc(db, "chats", state.chatId), {
-						messages: arrayUnion({
-							id: uuid(),
-							text: text,
-							senderId: currentUser.currentUser.uid,
-							date: Timestamp.now(),
-							img: downloadURL,
-						}),
-					});
+          if(currentUser.currentUser?.photoURL){
+            await updateDoc(doc(db, "chats", state.chatId), {
+              messages: arrayUnion({
+                id: uuid(),
+                text: text,
+                senderId: currentUser.currentUser.uid,
+                date: Timestamp.now(),
+                img: downloadURL,
+                userPhotoURL: currentUser.currentUser?.photoURL
+              }),
+            });
+          }else{
+            await updateDoc(doc(db, "chats", state.chatId), {
+              messages: arrayUnion({
+                id: uuid(),
+                text: text,
+                senderId: currentUser.currentUser.uid,
+                date: Timestamp.now(),
+                img: downloadURL,
+              }),
+            });
+          }
 				});
 			});
     } else {
       if(text){
-        await updateDoc(doc(db, "chats", state.chatId), {
-          messages: arrayUnion({
-            id: uuid(),
-            text,
-            senderId: currentUser.currentUser.uid,
-            date: Timestamp.now(),
-          }),
-        });
+        if(currentUser.currentUser?.photoURL){
+          await updateDoc(doc(db, "chats", state.chatId), {
+            messages: arrayUnion({
+              id: uuid(),
+              text,
+              senderId: currentUser.currentUser.uid,
+              date: Timestamp.now(),
+              userPhotoURL: currentUser.currentUser?.photoURL
+            }),
+          });
+        }else{
+          await updateDoc(doc(db, "chats", state.chatId), {
+            messages: arrayUnion({
+              id: uuid(),
+              text,
+              senderId: currentUser.currentUser.uid,
+              date: Timestamp.now(),
+            }),
+          });
+        }
       }
     }
 
@@ -82,31 +105,56 @@ const Input = () => {
   const setGroupMessage = async () => {
     if(img){
       const storageRef = ref(storage, uuid());
-      
-			
+
 			uploadBytes(storageRef, img).then((snapshot) => {
 				getDownloadURL(snapshot.ref).then(async (downloadURL) => {
+          if(currentUser.currentUser?.photoURL){
+            await updateDoc(doc(db, "groupChats", ChatState.ChatsInfo?.uid), { 
+              messages: arrayUnion({
+                id: uuid(),
+                text,
+                senderId: currentUser.currentUser?.uid,
+                date: Timestamp.now(),
+                img: downloadURL,
+                userPhotoURL: currentUser.currentUser?.photoURL
+              })
+            }); 
+          }else{
+            await updateDoc(doc(db, "groupChats", ChatState.ChatsInfo?.uid), { 
+              messages: arrayUnion({
+                id: uuid(),
+                text,
+                senderId: currentUser.currentUser?.uid,
+                date: Timestamp.now(),
+                img: downloadURL,
+              })
+            });
+          }
+				});
+			});
+    }else{
+      if(text){
+        if(currentUser.currentUser?.photoURL){
           await updateDoc(doc(db, "groupChats", ChatState.ChatsInfo?.uid), { 
             messages: arrayUnion({
               id: uuid(),
               text,
               senderId: currentUser.currentUser?.uid,
               date: Timestamp.now(),
-              img: downloadURL,
+              userPhotoURL: currentUser.currentUser?.photoURL
             })
           });
-				});
-			});
-    }else{
-      if(text){
-        await updateDoc(doc(db, "groupChats", ChatState.ChatsInfo?.uid), { 
-          messages: arrayUnion({
-            id: uuid(),
-            text,
-            senderId: currentUser.currentUser?.uid,
-            date: Timestamp.now()
-          })
-        });
+        }else{
+          await updateDoc(doc(db, "groupChats", ChatState.ChatsInfo?.uid), { 
+            messages: arrayUnion({
+              id: uuid(),
+              text,
+              senderId: currentUser.currentUser?.uid,
+              date: Timestamp.now()
+            })
+          });
+        }
+        
       }
     }
     

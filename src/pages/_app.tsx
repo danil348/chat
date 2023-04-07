@@ -1,16 +1,14 @@
 import '@/styles/globals.scss'
 
-import React, { useContext, useEffect } from 'react'
-import { AuthContext, AuthContextProvider } from '../../context/AuthContext'
+import React from 'react'
+import { AuthContextProvider } from '../../context/AuthContext'
 import { ChatContextProvider } from '../../context/ChatContext'
 import Home from '../pages/index'
 
-import { auth, db } from '@/firebase'
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { doc, getDoc } from 'firebase/firestore'
 import '../../components/Button/Button.scss'
 import '../../components/Input/Input.scss'
 import '../../components/Layout/Chats/Chats.scss'
+import '../../components/Layout/Chats/Messege/Messege.scss'
 import '../../components/Layout/Chats/SelectUsersModal/SelectUsersModal.scss'
 import '../../components/Layout/Layout.scss'
 import '../../components/Layout/NavBarItem/NavBarItem.scss'
@@ -25,8 +23,6 @@ import '../../components/modals/SearchModal/SearchModal.scss'
 import '../../components/Sidebar/Sidebar.scss'
 import '../../components/TopBar/TopBar.scss'
 import { GroupChatContextProvider } from '../../context/GroupChatContext'
-import { useLocalStorage } from '../../hooks/useLocalStorage'
-import useRegisterModal from '../../hooks/useRegisterModal'
 
 export default function App() {
   

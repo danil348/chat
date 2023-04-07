@@ -49,7 +49,7 @@ const Messages = () => {
     <div className="messages" id="messages">
       <div className="scroll-content">
         {messages.map((m, index) => (
-          <Message message={m} key={index} />
+          <Message message={m} key={index} index={index} messages={messages}/>
         ))}
       </div>
     </div>

@@ -55,7 +55,7 @@ const GroupMessages = () => {
 		<div className="messages" id="groupMessages">
 			<div className="scroll-content">
 				{messages && Object.entries(messages)?.map((m, index) => (
-					<Message message={m[1]} key={index} />
+					<Message message={m[1]} key={index}  index={index} messages={messages}/>
 				))}
       </div>
 		</div>
