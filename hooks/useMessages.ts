@@ -7,7 +7,7 @@ interface MessagesStore {
 }
 
 const useMessages = create<MessagesStore>((set) => ({
-	isOpen: true,
+	isOpen: false,
 	onOpen: () => set({isOpen: true}),
 	onClose: () => set({isOpen: false})
 }))

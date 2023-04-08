@@ -28,15 +28,20 @@ const GroupMessages = () => {
 	const { dispatchGroupChats } = useContext(GroupChatContext);
   const { ChatState } = useContext(GroupChatContext);
 
+  const [scrollbar, setScrollbar] = useState<Scrollbar>()
   const [groupMessagesContainer, setGroupMessagesContainer] = useState<boolean>(false);
 	const [messages, setMessages] = useState([]);
+  const [messageCount, setMessageCount] = useState(0)
+	
+  const [offsetY, setOffsetY] = useState(0)
+  const [offsetX, setOffsetX] = useState(0)
 
 	useEffect(() => {
     if(!groupMessagesContainer){
       const messageWrapper = document.getElementById('groupMessages')
       if(messageWrapper){
         setGroupMessagesContainer(true)
-        Scrollbar.init(messageWrapper, options);
+        setScrollbar(Scrollbar.init(messageWrapper, options))
       }
     }
 
@@ -51,9 +56,39 @@ const GroupMessages = () => {
 		}
   }, [ChatState.ChatsInfo?.uid]);
 
+
+	useEffect(() => {
+    scrollbar?.addListener(({ offset }) => {
+      setOffsetY(offset.y + scrollbar.size.container.height - 80)
+      setOffsetX(offset.x + scrollbar.size.container.width - 90)
+    });
+  },[scrollbar])
+
+	useEffect(()=>{
+    if(messages.length < messageCount){
+      setMessageCount(messages.length)
+    }else{
+      setTimeout(() => {
+        if(scrollbar){
+          scrollbar.scrollTop = scrollbar.size.content.height
+        }
+      }, 100);
+      setMessageCount(messages.length)
+    }
+  },[messages])
+
 	return (
 		<div className="messages" id="groupMessages">
 			<div className="scroll-content">
+			{scrollbar?.size.content.height - (scrollbar?.scrollTop + scrollbar?.size.container.height) > scrollbar?.size.container.height / 2 && 
+          <div className="scroll-button" style={{transform: `translate(${offsetX}px, ${offsetY}px)` }}
+            onClick={() => {
+              scrollbar?.scrollTo(scrollbar.offset.x, scrollbar.size.content.height, 600);
+            }}  
+          >
+            <HiArrowDown size={25} color="rgb(195, 195, 195)"/>
+          </div>
+        }
 				{messages && Object.entries(messages)?.map((m, index) => (
 					<Message message={m[1]} key={index}  index={index} messages={messages}/>
 				))}

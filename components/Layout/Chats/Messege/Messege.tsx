@@ -1,6 +1,6 @@
 import { db } from "@/firebase";
 import { arrayRemove, doc, updateDoc } from "firebase/firestore";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { BsCheckAll, BsDiscord } from "react-icons/bs";
 import { AuthContext } from "../../../../context/AuthContext";
@@ -34,6 +34,7 @@ const Message: React.FC<MessageProps> = ({message, index, messages}) => {
                  "(◕‿◕)", "o (≧▽≦)o", "(´｡• ᵕ •｡`)"]
   const spoilerIcon = "❤️"
   
+
   const deleteMessage = async () => {
     if(groupMessagesState.isOpen){
       try {
@@ -157,7 +158,6 @@ const Message: React.FC<MessageProps> = ({message, index, messages}) => {
   const reactionsCounters = (
     <div className="message__reactions message-reactions">
       {message.reactions && Object.entries(message.reactions).map((reaction: any, idx) => {
-        console.log(reaction)
         return (
           <div className="message-reactions__item" key={idx}>
             {+reaction[0] == icons.length ?  <div className="">{spoilerIcon}</div> : <div className="">{icons[+reaction[0]]}</div> }
@@ -167,6 +167,7 @@ const Message: React.FC<MessageProps> = ({message, index, messages}) => {
       })}
     </div>
   )
+
 
 	return (
     <div

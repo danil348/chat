@@ -12,6 +12,8 @@
 	}
 
 	.chat {
+		min-height: 100vh;
+		justify-content: space-between;
 		background-color: $bg-dark-2;
 	}
 	height: 100%;
@@ -114,7 +116,7 @@
 				color: $textColor;
 			}
 		}
-		.group-chats__usersCount{
+		.group-chats__usersCount {
 			font-size: 12px;
 			line-height: 16px;
 			font-weight: 500;
@@ -165,7 +167,7 @@
 			right: 4px;
 			overflow: hidden;
 			top: 50%;
-			transform: translate(0,-50%);
+			transform: translate(0, -50%);
 			height: 99%;
 			border-radius: 20px;
 			width: 8px; /* Remove scrollbar space */
@@ -258,5 +260,31 @@
 		white-space: nowrap;
 		line-height: 13px;
 		color: $textColor-opacity-1;
+	}
+}
+
+#messages {
+	.scroll-content.as {
+	}
+}
+.chat {
+	.scroll-button {
+		width: 40px;
+		position: fixed;
+		z-index: 200;
+		height: 40px;
+		border-radius: 100%;
+		cursor: pointer;
+		display: flex;
+		justify-content: center;
+		transition: background-color 0.3s ease 0s;
+		align-items: center;
+		will-change: transform;
+		background-color: $bg-dark-9;
+		@media (any-hover: hover){
+			&:hover{
+				background-color: $bg-dark-7;
+			}
+		}
 	}
 }

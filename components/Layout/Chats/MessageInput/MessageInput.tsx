@@ -1,9 +1,10 @@
 import { db, storage } from "@/firebase";
 import {
+  Timestamp,
   arrayUnion,
   doc,
   getDoc,
-  serverTimestamp, Timestamp, updateDoc
+  updateDoc
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useState } from "react";
@@ -84,22 +85,6 @@ const Input = () => {
           });
         }
       }
-    }
-
-    if(text){
-      await updateDoc(doc(db, "userChats", currentUser.currentUser.uid), {
-        [state.chatId + ".lastMessage"]: {
-          text,
-        },
-        [state.chatId + ".date"]: serverTimestamp(),
-      });
-  
-      await updateDoc(doc(db, "userChats", state.user.uid), {
-        [state.chatId + ".lastMessage"]: {
-          text,
-        },
-        [state.chatId + ".date"]: serverTimestamp(),
-      });
     }
 
     setText("");
@@ -193,7 +178,7 @@ const Input = () => {
 
   return (
     <>
-      {(groupMessages || messages) && 
+      {(groupMessages.isOpen || messages.isOpen) && 
         <div className="input">
           <input
             type="text"

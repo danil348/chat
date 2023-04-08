@@ -133,7 +133,7 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 
 	const ChatsContent = (
 		<>
-			{chats && Object.entries(chats)?.map(chat => (
+			{chats && Object.entries(chats)?.map((chat, index) => (
 				<div 
 					className={messages.isOpen && (chat[1].userInfo?.uid == state.user?.uid) ? "sidebar__item sidebar-item selected" : "sidebar__item sidebar-item"} 
 					key={chat[0]}
