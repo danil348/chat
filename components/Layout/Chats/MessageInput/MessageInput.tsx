@@ -8,6 +8,7 @@ import {
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useState } from "react";
+import { MdClose } from "react-icons/md";
 import { RiImageLine, RiMailSendLine } from "react-icons/ri";
 import { v4 as uuid } from "uuid";
 import { AuthContext } from "../../../../context/AuthContext";
@@ -19,7 +20,8 @@ import useMessages from "../../../../hooks/useMessages";
 const Input = () => {
   const [text, setText] = useState("");
   const [img, setImg] = useState<File | null>(null);
-  
+  const [image, setImage] = useState<string>()
+
 	const { dispatchGroupChats } = useContext(GroupChatContext);
   const  currentUser = useContext(AuthContext);
   const { state } = useContext(ChatContext);
@@ -157,12 +159,9 @@ const Input = () => {
 
   const handleSend = async () => {
     if(messages.isOpen){
-      console.log("send messages")
       setMessages()
     }else if(groupMessages.isOpen){
-      console.log("send groupMessages")
       setGroupMessage()
-
 
       const docRef = doc(db, "groupChats", ChatState.ChatsInfo.uid);
       const docSnap = await getDoc(docRef)
@@ -176,10 +175,25 @@ const Input = () => {
 		}
 	}
 
+  const onImageChange = (event: any) => {
+    if (event.target.files && event.target.files[0]) {
+      setImage(URL.createObjectURL(event.target.files[0]));
+    }
+   }
+
   return (
     <>
       {(groupMessages.isOpen || messages.isOpen) && 
         <div className="input">
+          {img && <div className="input-image__preview image-preview">
+            <div className="image-preview__removeButton" onClick={() => {
+              setImg(null)
+            }}>
+              <MdClose color="rgb(195, 195, 195)" size={25} style={{cursor: "pointer"}}/>
+            </div>
+            <img loading="lazy" src={image} alt="" id="img" />
+          </div>
+          }
           <input
             type="text"
             placeholder={"Написать @" + state.user?.displayName}
@@ -193,6 +207,7 @@ const Input = () => {
               style={{ display: "none" }}
               onChange={(e) => {
                 if(e.target.files){
+                  onImageChange(e)
                   setImg(e.target.files[0])
                 }
               }}

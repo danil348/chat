@@ -186,6 +186,40 @@
 		padding-left: 16px;
 		padding-right: 16px;
 		.input {
+			position: relative;
+			.input-image__preview {
+				.image-preview__removeButton {
+					position: absolute;
+					z-index: 30;
+					right: 0;
+					width: 30px;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					height: 30px;
+					background-color: $bg-dark-9;
+					border-radius: 0 8px 0 8px;
+					top: 0;
+				}
+				position: absolute;
+				background-color: $bg-dark-9;
+				width: 150px;
+				height: 100px;
+				transform: translate(0, -100%);
+				top: -4px;
+				border-radius: 8px;
+				left: 0;
+				img {
+					position: absolute;
+					width: 90%;
+					height: 90%;
+					top: 50%;
+					border-radius: 8px;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					object-fit: cover;
+				}
+			}
 			.input__labelFile {
 				display: flex;
 				justify-content: center;
@@ -265,7 +299,7 @@
 }
 
 .chat {
-	.scroll-content{
+	.scroll-content {
 		will-change: transform;
 	}
 	.scroll-button {
@@ -282,8 +316,8 @@
 		transition: background-color 0.3s ease 0s;
 		align-items: center;
 		background-color: $bg-dark-9;
-		@media (any-hover: hover){
-			&:hover{
+		@media (any-hover: hover) {
+			&:hover {
 				background-color: $bg-dark-7;
 			}
 		}
