@@ -29,7 +29,7 @@ const Messages = () => {
   const [scrollbar, setScrollbar] = useState<Scrollbar>()
   const [messageCount, setMessageCount] = useState(0)
   const [offsetY, setOffsetY] = useState(0)
-  const [offsetX, setOffsetX] = useState(0)
+  const [offsetX, setOffsetX] = useState(0) 
   
   useEffect(() => {
     if(!messagesContainer){
@@ -60,7 +60,7 @@ const Messages = () => {
   useEffect(()=>{
     if(messages.length < messageCount){
       setMessageCount(messages.length)
-    }else{
+    }else if(messages.length != messageCount) {
       setTimeout(() => {
         if(scrollbar){
           scrollbar.scrollTop = scrollbar.size.content.height
@@ -71,10 +71,9 @@ const Messages = () => {
   },[messages])
 
   return (
-    <div className="messages" id="messages">
-      <div className="scroll-content">
-        {scrollbar?.size.content.height - (scrollbar?.scrollTop + scrollbar?.size.container.height) > scrollbar?.size.container.height / 2 && 
-          <div className="scroll-button" style={{transform: `translate(${offsetX}px, ${offsetY}px)` }}
+    <>
+    {scrollbar?.size.content.height - (scrollbar?.scrollTop + scrollbar?.size.container.height) > scrollbar?.size.container.height / 2 && 
+          <div className="scroll-button"
             onClick={() => {
               scrollbar?.scrollTo(scrollbar.offset.x, scrollbar.size.content.height, 600);
             }}  
@@ -82,15 +81,19 @@ const Messages = () => {
             <HiArrowDown size={25} color="rgb(195, 195, 195)"/>
           </div>
         }
+        
+    <div className="messages" id="messages">
+      <div className="scroll-content">
+        
         {messages.map((m, index) => {
           return (
-            <div className="" key={index} >
-              <Message message={m}  index={index} messages={messages}/>
-            </div>
+            
+            <Message message={m}  index={index} messages={messages}/>
           )
         })}
       </div>
     </div>
+    </>
   );
 };
 

@@ -1,6 +1,11 @@
 @import '../../../../src/styles/variables.scss';
 
 .message {
+	.message__image{
+		img{
+			max-width: 500px;
+		}
+	}
 	position: relative;
 	&:not(:nth-child(1)) {
 		margin-top: 50px;

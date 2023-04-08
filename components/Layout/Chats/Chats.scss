@@ -175,6 +175,7 @@
 		}
 		/* Optional: show position indicator in red */
 		.scrollbar-thumb {
+			cursor: pointer;
 			border-radius: 20px;
 			background: $bg-dark-11;
 		}
@@ -263,14 +264,15 @@
 	}
 }
 
-#messages {
-	.scroll-content.as {
-	}
-}
 .chat {
+	.scroll-content{
+		will-change: transform;
+	}
 	.scroll-button {
 		width: 40px;
 		position: fixed;
+		bottom: 90px;
+		right: 40px;
 		z-index: 200;
 		height: 40px;
 		border-radius: 100%;
@@ -279,7 +281,6 @@
 		justify-content: center;
 		transition: background-color 0.3s ease 0s;
 		align-items: center;
-		will-change: transform;
 		background-color: $bg-dark-9;
 		@media (any-hover: hover){
 			&:hover{
