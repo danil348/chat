@@ -68,7 +68,8 @@ const Chats: React.FC<ChatsProps> = ({isOpen}) => {
 						displayName: docSnap.data()?.displayName,
 						email: docSnap.data()?.email,
 						uid: docSnap.data()?.uid,
-						photoURL: docSnap.data()?.photoURL
+						photoURL: docSnap.data()?.photoURL,
+						photoColor: docSnap.data()?.photoColor
 					})
 				}
 			});

@@ -42,7 +42,8 @@ const RegisterModal = () => {
         email: res.user.email,
         uid: res.user.uid,
         displayName: names,
-        photoURL: null
+        photoURL: null,
+        photoColor: null
       })
       
       setItem('password', password)

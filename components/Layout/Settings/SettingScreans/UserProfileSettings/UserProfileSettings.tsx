@@ -1,8 +1,7 @@
 import { db, storage } from "@/firebase";
+import { FastAverageColor } from "fast-average-color";
 import {
-	DocumentData,
-	doc,
-	onSnapshot,
+	doc, DocumentData, onSnapshot,
 	serverTimestamp,
 	updateDoc
 } from "firebase/firestore";
@@ -21,6 +20,7 @@ const UserProfileSettings = () => {
 
 	const [chats, setChats] = useState<DocumentData>([])
   const [img, setImg] = useState<File | null>(null);
+	const [color, setColor] = useState('')
 	
   const userContext = useContext(AuthContext)
 	const  currentUser = useContext(AuthContext);
@@ -29,12 +29,12 @@ const UserProfileSettings = () => {
     const imgUnsub = onSnapshot(doc(db, "userChats", userContext.currentUser?.uid), (doc) => {
 			setChats(doc.data() as DocumentData);
 		});
-
+		
 		return () => {
 			imgUnsub();
 		};
   }, [userContext.currentUser?.uid]);
-	
+
 	if(userProfileSettings.isOpen == false){
 		return null
 	}
@@ -61,21 +61,36 @@ const UserProfileSettings = () => {
 						});
 					})
 
-					await updateDoc(doc(db, "users", currentUser.currentUser.uid), {
-						photoURL: downloadURL,
-					});
+					var fac = new FastAverageColor
+					if(img){
+						fac.getColorAsync(URL.createObjectURL(img))
+						.then(async color => {
+							setColor(color.rgb)
+							
+							await updateDoc(doc(db, "users", currentUser.currentUser.uid), {
+								photoURL: downloadURL,
+								photoColor: color.rgb
+							});
+
+							currentUser.currentUser.photoColor = color.rgb
+						})
+						.catch(e => {
+						});
+					}
+
 				});
 			});
     } 
-  
+		
     setImg(null);
   };
+
 
 	return (
 		<div className="userProfileSettings">
 			<div className="userProfileSettings__title">Моя учётная запись</div>
 			<div className="userProfileSettings__UserDashboard user-dashboard">
-				<div className="user-dashboard__color"></div>
+				<div className="user-dashboard__color" style={ currentUser.currentUser?.photoColor && {backgroundColor: currentUser.currentUser?.photoColor}}></div>
 				<div className="user-dashboard__info userInfo-dashboard">
 					<div className="userInfo-dashboard__image">
 						{img && 
@@ -94,7 +109,7 @@ const UserProfileSettings = () => {
 						<label className="userInfo-image__input" htmlFor="userImageInput">
 							<RiImageLine size={30} color="white"/>
 						</label>
-						{currentUser.currentUser?.photoURL && <img loading="lazy" src={currentUser.currentUser?.photoURL} alt=""/>}
+						{currentUser.currentUser?.photoURL && <img className="userProfileImage" loading="lazy" src={currentUser.currentUser?.photoURL} alt=""/>}
 					</div>
 					<div className="userInfo-dashboard__name">
 					{currentUser.currentUser?.name && currentUser.currentUser?.name} 
