@@ -72,7 +72,7 @@ const Messages = () => {
 
   return (
     <>
-    {scrollbar?.size.content.height - (scrollbar?.scrollTop + scrollbar?.size.container.height) > scrollbar?.size.container.height / 2 && 
+    {scrollbar?.size.content.height && scrollbar?.size.content.height - (scrollbar?.scrollTop + scrollbar?.size.container.height) > scrollbar?.size.container.height / 2 && 
           <div className="scroll-button"
             onClick={() => {
               scrollbar?.scrollTo(scrollbar.offset.x, scrollbar.size.content.height, 600);
@@ -88,7 +88,7 @@ const Messages = () => {
         {messages.map((m, index) => {
           return (
             
-            <Message message={m}  index={index} messages={messages}/>
+            <Message message={m}  index={index} messages={messages} key={index}/>
           )
         })}
       </div>
